@@ -1,30 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en, kiswahili">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="/images/pp.jpg" type="image/x-icon">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&display=swap" rel="stylesheet">
-    <title>MiniEats - Home</title>
     <link rel="stylesheet" href="css/styles.css">
+    <title>MiniEats Ke</title>
 </head>
 <body>
-  <header>
-    <img src="/images/logo.png" alt="MiniEats Logo">
-    <h1>Welcome to MiniEats</h1>
-    <nav>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/canteen">Canteen</a></li>
-        <li><a href="/contact">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
-  <main>
-    <h2>Home Page</h2>
-    <p>Welcome to the MiniEats application!</p>
-  </main>
+    <div class="header">
+    <div class="navbar">
+        <div class="logo">
+            <a href="/"><img src="images/logo.png" width="100px"></a>
+        </div>
+        <nav>
+         <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/canteen">Canteen</a></li>
+          <li><a href="/specials">Specials</a></li>
+         </ul> 
+        </nav>
+    </div>
+    <h1>Welcome to MiniEats - Your tasty take out Spot!</h1>
+</div>
+<main>
+    <!-- Main Dishes -->
+    <div class="categories">
+        <h2>Main Dishes</h2>
+        <div class="small-container">
+          <div id="main-items">
+            <% if (mainDishes && mainDishes.items.length > 0) { %>
+              <ul>
+                <% mainDishes.items.forEach(item => { %>
+                  <li><%= item %></li>
+                <% }); %>
+              </ul>
+            <% } else { %>
+              <p>No main dishes available</p>
+            <% } %>
+          </div>
+        </div>
+    </div>
+
+    <!-- Fast Foods -->
+    <div class="categories">
+        <h2>Fast Foods</h2>
+        <div class="small-container">
+          <div id="fast-items">
+            <% if (fastFoods && fastFoods.items.length > 0) { %>
+              <ul>
+                <% fastFoods.items.forEach(item => { %>
+                  <li><%= item %></li>
+                <% }); %>
+              </ul>
+            <% } else { %>
+              <p>No fast foods available</p>
+            <% } %>
+          </div>
+        </div>
+    </div>
+
+    <!-- Drinks -->
+    <div class="categories">
+        <h2>Drinks</h2>
+        <div class="small-container">
+          <div id="drink-items">
+            <% if (drinks && drinks.items.length > 0) { %>
+              <ul>
+                <% drinks.items.forEach(item => { %>
+                  <li><%= item %></li>
+                <% }); %>
+              </ul>
+            <% } else { %>
+              <p>No drinks available</p>
+            <% } %>
+          </div>
+        </div>
+    </div>
+</main>
+    <footer class="footer">
+        <div class="footer-content">
+          
+          <div class="footer-section links">
+            <h3>Quick Links</h3>
+            <ul>
+              <li><a href="/about">About</a></li>
+              <li><a href="/contact">Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer-section contact">
+            <h3>Contact Us</h3>
+            <p>Email: minieatske@gmail.com</p>
+            <p>Phone: +254797054212</p>
+          </div>
+          <div class="footer-section social">
+            <h3>Follow Us</h3>
+            <div class="social-icons">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"><FaFacebook /></a>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"><FaTwitter /></a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"><FaInstagram /></a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"><FaLinkedin /></a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2024 minieatske. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>
