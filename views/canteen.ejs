@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en, kiswahili">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,42 +7,34 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&display=swap" rel="stylesheet">
-    <title>MiniEats - Canteen</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>MiniEats Ke</title>
 </head>
 <body>
-  <header>
-    <img src="/images/logo.png" alt="MiniEats Logo">
-    <h1>Canteen</h1>
-    <nav>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/canteen">Canteen</a></li>
-        <li><a href="/contact">Contact</a></li>
-      </ul>
-    </nav>
-  </header>
-  <main>
-    <h2>Our Products</h2>
-    <% const groupedItems = {}; %>
-    <% items.forEach(item => { %>
-      <% if (!groupedItems[item.category]) groupedItems[item.category] = []; %>
-      <% groupedItems[item.category].push(item); %>
-    <% }); %>
-    <% Object.keys(groupedItems).forEach(category => { %>
-      <h3><%= category %></h3>
-      <ul>
-        <% groupedItems[category].forEach(item => { %>
-          <li>
-            <img src="<%= item.imageUrl %>" alt="<%= item.name %> Image">
-            <div>
-              <h4><%= item.name %></h4>
-              <p>$<%= item.price %></p>
-            </div>
-          </li>
-        <% }); %>
-      </ul>
-    <% }); %>
-  </main>
+    <header>
+        <img src="/images/logo.png" alt="MiniEats Logo">
+        <h1>Canteen</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/canteen">Canteen</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Our Products</h2>
+        <ul>
+            <% for(let item of items) { %>
+                <li>
+                    <img src="<%= item.imageUrl %>" alt="<%= item.name %> Image">
+                    <div>
+                        <h3><%= item.name %></h3>
+                        <p>$<%= item.price %></p>
+                    </div>
+                </li>
+            <% } %>
+        </ul>
+    </main>
 </body>
 </html>
