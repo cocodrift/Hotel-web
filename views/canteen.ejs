@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Canteen</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <img src="/images/logo.png" alt="MiniEats Logo">
+    <h1>Canteen</h1>
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/canteen">Canteen</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/addProducts">Add Products</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <h2>Our Products</h2>
+    <ul>
+      <% for(let item of items) { %>
+        <li><%= item.name %> - $<%= item.price %></li>
+      <% } %>
+    </ul>
+  </main>
+</body>
+</html>
