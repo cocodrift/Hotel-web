@@ -7,6 +7,7 @@ const path = require('path'); // Added this line
 // Connect to MongoDB
 const uri = process.env.MONGODB_URI;
 
+mongoose.set('strictQuery', false); // Add this line to prepare for Mongoose 7 deprecation
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Error connecting to MongoDB:', err));
