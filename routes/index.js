@@ -3,8 +3,21 @@ const router = express.Router();
 const Item = require('../models/Item');
 const Category = require('../models/Category');
 
-router.get('/', (req, res) => {
-  res.render('index');
+
+router.get('/', async (req, res) => {
+  try {
+    const mainDishes = await Item.find({ category: 'Main Dishes' });
+    const fastFoods = await Item.find({ category: 'Fast Foods' });
+    const drinks = await Item.find({ category: 'Drinks' });
+
+    res.render('index', {
+      mainDishes: mainDishes,
+      fastFoods: fastFoods,
+      drinks: drinks
+    });
+  } catch (err) {
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 router.get('/canteen', (req, res) => {
