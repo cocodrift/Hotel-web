@@ -1,10 +1,9 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const app = express();
 const port = process.env.PORT || 3000;
-
-require('dotenv').config();
 
 // Set EJS as the view engine
 app.set('view engine', 'ejs');
@@ -20,6 +19,10 @@ app.use(express.urlencoded({ extended: true }));
 // MongoDB connection
 mongoose.set('strictQuery', false); 
 const mongoURI = process.env.MONGO_URI;
+if (!mongoURI) {
+    console.error('MONGO_URI is not defined');
+    process.exit(1);
+}
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
