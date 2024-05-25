@@ -8,7 +8,15 @@ router.get('/', (req, res) => {
 });
 
 router.get('/canteen', (req, res) => {
-  res.render('canteen');
+  // Assuming Item.find() retrieves items from the database
+  Item.find()
+    .then(items => {
+      res.render('canteen', { items }); // Pass the items variable to the view
+    })
+    .catch(err => {
+      console.error('Error fetching items:', err);
+      res.status(500).send('Error fetching items');
+    });
 });
 
 router.get('/contact', (req, res) => {
@@ -24,6 +32,7 @@ router.post('/addProducts', (req, res) => {
     name: req.body.name,
     price: req.body.price,
     category: req.body.category,
+    imageUrl: req.body.imageUrl, // Add the imageUrl field
   });
 
   newItem.save()

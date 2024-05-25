@@ -14,17 +14,30 @@
         <li><a href="/">Home</a></li>
         <li><a href="/canteen">Canteen</a></li>
         <li><a href="/contact">Contact</a></li>
-        <li><a href="/addProducts">Add Products</a></li>
       </ul>
     </nav>
   </header>
   <main>
     <h2>Our Products</h2>
-    <ul>
-      <% for(let item of items) { %>
-        <li><%= item.name %> - $<%= item.price %></li>
-      <% } %>
-    </ul>
+    <% const groupedItems = {}; %>
+    <% items.forEach(item => { %>
+      <% if (!groupedItems[item.category]) groupedItems[item.category] = []; %>
+      <% groupedItems[item.category].push(item); %>
+    <% }); %>
+    <% Object.keys(groupedItems).forEach(category => { %>
+      <h3><%= category %></h3>
+      <ul>
+        <% groupedItems[category].forEach(item => { %>
+          <li>
+            <img src="<%= item.imageUrl %>" alt="<%= item.name %> Image">
+            <div>
+              <h4><%= item.name %></h4>
+              <p>$<%= item.price %></p>
+            </div>
+          </li>
+        <% }); %>
+      </ul>
+    <% }); %>
   </main>
 </body>
 </html>
