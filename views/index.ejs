@@ -14,13 +14,14 @@
     <div class="header">
         <div class="navbar">
             <div class="logo">
-                <a href="/"><img src="/images/logo.png" width="100px"></a>
+                <a href="/"><img src="/images/logo.png" width="100px" alt="MiniEats Ke Logo"></a>
             </div>
             <nav>
                 <ul>
                     <li><a href="/">Home</a></li>
                     <li><a href="/canteen">Canteen</a></li>
-                    <li><a href="/contact">Specials</a></li>
+                    <li><a href="/specials">Specials</a></li>
+                    <li><a href="/contact">Contact</a></li>
                 </ul> 
             </nav>
         </div>
@@ -35,7 +36,10 @@
                     <% if (mainDishes && mainDishes.length > 0) { %>
                         <ul>
                             <% mainDishes.forEach(item => { %>
-                                <li><%= item.name %> - $<%= item.price %></li>
+                                <li>
+                                    <img src="<%= item.imageUrl %>" alt="<%= item.name %>" width="100">
+                                    <%= item.name %> - $<%= item.price %>
+                                </li>
                             <% }); %>
                         </ul>
                     <% } else { %>
@@ -53,7 +57,10 @@
                     <% if (fastFoods && fastFoods.length > 0) { %>
                         <ul>
                             <% fastFoods.forEach(item => { %>
-                                <li><%= item.name %> - $<%= item.price %></li>
+                                <li>
+                                    <img src="<%= item.imageUrl %>" alt="<%= item.name %>" width="100">
+                                    <%= item.name %> - $<%= item.price %>
+                                </li>
                             <% }); %>
                         </ul>
                     <% } else { %>
@@ -71,7 +78,10 @@
                     <% if (drinks && drinks.length > 0) { %>
                         <ul>
                             <% drinks.forEach(item => { %>
-                                <li><%= item.name %> - $<%= item.price %></li>
+                                <li>
+                                    <img src="<%= item.imageUrl %>" alt="<%= item.name %>" width="100">
+                                    <%= item.name %> - $<%= item.price %>
+                                </li>
                             <% }); %>
                         </ul>
                     <% } else { %>
