@@ -31,6 +31,7 @@
                 <li><a href="/">Home</a></li>
                 <li><a href="/canteen">Canteen</a></li>
                 <li><a href="/contact">Contact</a></li>
+                <li><a href="/cart">Cart (<span id="cart-count">0</span>)</a></li>
             </ul>
         </nav>
     </header>
@@ -58,10 +59,8 @@
             <% }); %>
         </ul>
         
-
         <h2>Your Cart</h2>
         <ul id="cart-list"></ul>
-
     </main>
     <script>
         function filterItems(category) {
@@ -76,62 +75,61 @@
             });
         }
 
-   
-    // Function to add an item to the cart
-    function addToCart(id, name, price) {
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-        // Check if the item is already in the cart
-        const existingItemIndex = cart.findIndex(item => item.id === id);
-        if (existingItemIndex > -1) {
-            // Increase quantity if item already exists
-            cart[existingItemIndex].quantity += 1;
-        } else {
-            // Add new item to the cart
-            cart.push({ id, name, price, quantity: 1 });
+        function addToCart(id, name, price) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const existingItemIndex = cart.findIndex(item => item.id === id);
+            if (existingItemIndex > -1) {
+                cart[existingItemIndex].quantity += 1;
+            } else {
+                cart.push({ id, name, price, quantity: 1 });
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            displayAddToCartMessage(name);
         }
 
-        // Save the updated cart to local storage
-        localStorage.setItem('cart', JSON.stringify(cart));
+        function displayAddToCartMessage(itemName) {
+            const message = document.createElement('div');
+            message.classList.add('cart-message');
+            message.textContent = `${itemName} has been added to your cart.`;
+            document.body.appendChild(message);
+            setTimeout(() => message.remove(), 2000);
+        }
 
-        // Optionally, provide feedback to the user
-        alert(`${name} has been added to your cart.`);
-    }
+        function loadCart() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartList = document.getElementById('cart-list');
+            cartList.innerHTML = '';
+            let total = 0;
+            cart.forEach(item => {
+                const cartItem = document.createElement('li');
+                cartItem.classList.add('cart-item');
+                cartItem.innerHTML = `
+                    <img src="/images/${item.id}.jpg" alt="${item.name}">
+                    <div>
+                        <h3>${item.name}</h3>
+                        <p>$${item.price} x ${item.quantity}</p>
+                    </div>
+                `;
+                total += item.price * item.quantity;
+                cartList.appendChild(cartItem);
+            });
+            const totalElement = document.createElement('div');
+            totalElement.classList.add('total');
+            totalElement.textContent = `Total: $${total.toFixed(2)}`;
+            cartList.appendChild(totalElement);
+        }
 
-    // Function to load the cart items
-    function loadCart() {
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const cartList = document.getElementById('cart-list');
-        cartList.innerHTML = ''; // Clear the cart list
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
+            document.getElementById('cart-count').textContent = cartCount;
+        }
 
-        let total = 0;
-
-        cart.forEach(item => {
-            const cartItem = document.createElement('li');
-            cartItem.classList.add('cart-item');
-
-            cartItem.innerHTML = `
-                <img src="/images/${item.id}.jpg" alt="${item.name}">
-                <div>
-                    <h3>${item.name}</h3>
-                    <p>$${item.price} x ${item.quantity}</p>
-                </div>
-            `;
-
-            total += item.price * item.quantity;
-            cartList.appendChild(cartItem);
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCart();
+            updateCartCount();
         });
-
-        const totalElement = document.createElement('div');
-        totalElement.classList.add('total');
-        totalElement.textContent = `Total: $${total.toFixed(2)}`;
-        cartList.appendChild(totalElement);
-    }
-
-    // Load the cart items when the page is loaded
-    document.addEventListener('DOMContentLoaded', loadCart);
-</script>
-
-  
+    </script>
 </body>
 </html>
