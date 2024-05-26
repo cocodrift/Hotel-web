@@ -39,20 +39,7 @@
 
     <link rel="stylesheet" href="/css/styles.css">
     <title>MiniEats Ke- Canteen</title>
-    <script>
-      function filterItems(category) {
-    const items = document.querySelectorAll('.item');
-    items.forEach(item => {
-        const categoryValue = item.getAttribute('data-category');
-        if (categoryValue === category || category === 'all') {
-            item.style.display = 'block';
-        } else {
-            item.style.display = 'none';
-        }
-    });
-}
-
-      </script>
+ 
 </head>
 <body>
     <header>
@@ -89,6 +76,50 @@
             <% }); %>
         </ul>
     </main>
-    <script src="/js/script.js"></script>
+    <script>
+        // Pass the items array to your JavaScript file
+        const items = <%= JSON.stringify(items) %>;
+    </script>
+    <script>
+        // script.js
+    
+        // Access the items variable passed from the HTML file
+        console.log(items); // This should output the items array
+    
+        function filterItems(category) {
+            const items = document.querySelectorAll('.item');
+            items.forEach(item => {
+                const categoryValue = item.getAttribute('data-category');
+                if (categoryValue === category || category === 'all') {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    </script>
+<script>
+    // Pass the items array to your JavaScript file
+    const items = <%= JSON.stringify(items) %>;
+</script>
+<script>
+    // script.js
+
+    // Access the items variable passed from the HTML file
+    console.log(items); // This should output the items array
+
+    function filterItems(category) {
+        const items = document.querySelectorAll('.item');
+        items.forEach(item => {
+            const categoryValue = item.getAttribute('data-category');
+            if (categoryValue === category || category === 'all') {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+</script>
+    
 </body>
 </html>
