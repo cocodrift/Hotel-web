@@ -66,6 +66,7 @@
             <span class="close" id="close-cart-modal">&times;</span>
             <h2>Your Cart</h2>
             <ul id="cart-list"></ul>
+            <button onclick="placeOrder()">Place Order</button>
         </div>
     </div>
 
@@ -115,35 +116,34 @@
         }
     
         function placeOrder() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    fetch('/api/place-order', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ cart }),
-    })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            fetch('/place-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ cart }),
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Failed to place order');
+            })
+            .then(data => {
+                // Handle successful order placement
+                console.log('Order placed successfully:', data);
+                localStorage.removeItem('cart');
+                loadCart(); // Update the cart display
+                updateCartCount(); // Update the cart count display
+                alert('Your order has been placed successfully!');
+            })
+            .catch(error => {
+                // Handle error
+                console.error('Error placing order:', error.message);
+                alert('Failed to place order. Please try again later.');
+            });
         }
-        throw new Error('Failed to place order');
-    })
-    .then(data => {
-        // Handle successful order placement
-        console.log('Order placed successfully:', data);
-        localStorage.removeItem('cart');
-        loadCart(); // Update the cart display
-        updateCartCount(); // Update the cart count display
-        alert('Your order has been placed successfully!');
-    })
-    .catch(error => {
-        // Handle error
-        console.error('Error placing order:', error.message);
-        alert('Failed to place order. Please try again later.');
-    });
-}
-
     
         function loadCart() {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -159,7 +159,6 @@
                         <p>$${item.price} x ${item.quantity}</p>
                     </div>
                     <button onclick="removeFromCart('${item.id}')">Remove</button>
-                    <button onclick="placeOrder()">Place Order</button>
                 `;
                 total += item.price * item.quantity;
                 cartList.appendChild(cartItem);

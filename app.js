@@ -4,6 +4,22 @@ const mongoose = require('mongoose');
 const path = require('path');
 const app = express();
 const port = process.env.PORT || 3000;
+const errorHandler = require('./middleware/errorHandler');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100 // limit each IP to 100 requests per windowMs
+});
+
+// Apply to all requests
+app.use(limiter);
+
+app.use(helmet());
+
+// Use error handling middleware
+app.use(errorHandler);
 
 // Set EJS as the view engine
 app.set('view engine', 'ejs');

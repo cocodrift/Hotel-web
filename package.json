@@ -1,23 +1,28 @@
 {
-    "name": "MiniEats",
-    "version": "1.0.0",
-    "description": "A simple Node.js application for managing a canteen.",
-    "main": "app.js",
-    "scripts": {
-      "start": "nodemon app.js",
-      "dev": "nodemon app.js"
-    },
-    "author": "Mark Mutugo",
-    "license": "MIT",
-    "dependencies": {
-      "dotenv": "^10.0.0",
-      "express": "^4.17.1",
-      "mongoose": "^5.12.13",
-      "ejs": "^3.1.6",
-      "nodemon": "^3.1.0"
-    },
-    "devDependencies": {
-      "nodemon": "^2.0.15"
-    }
-  }
-  
+  "name": "canteen-app",
+  "version": "1.0.0",
+  "description": "A canteen application built with Express.js",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.1",
+    "express-rate-limit": "^6.5.0",
+    "express-validator": "^6.10.0",
+    "helmet": "^4.6.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.1.2",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  },
+  "author": "Your Name",
+  "license": "ISC"
+}
