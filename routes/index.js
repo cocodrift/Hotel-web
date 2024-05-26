@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Item = require('../models/Item');
+const Order = require( '../models/Order')
 
 router.get('/', async (req, res) => {
   try {
@@ -18,6 +19,19 @@ router.get('/canteen', async (req, res) => {
   } catch (err) {
       console.error('Failed to fetch items', err);
       res.status(500).send('Internal Server Error');
+  }
+});
+
+router.post('/api/place-order', async (req, res) => {
+  const { cart } = req.body;
+
+  try {
+      const order = new Order({ items: cart });
+      await order.save();
+      res.json({ message: 'Order placed successfully', orderId: order._id });
+  } catch (error) {
+      console.error('Error placing order:', error);
+      res.status(500).json({ error: 'Failed to place order' });
   }
 });
 
