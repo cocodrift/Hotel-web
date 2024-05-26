@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
 });
 
 
-router.get('/canteen','/canteen/:category', async (req, res) => {
+router.get('/canteen', async (req, res) => {
   const { category } = req.params;
   try {
     const items = await Item.find({ category });
