@@ -5,17 +5,9 @@ const Item = require('../models/Item');
 
 router.get('/', async (req, res) => {
   try {
-    const mainDishes = await Item.find({ category: 'Main Dishes' });
-    const fastFoods = await Item.find({ category: 'Fast Foods' });
-    const drinks = await Item.find({ category: 'Drinks' });
-
-    res.render('index', {
-      mainDishes: mainDishes,
-      fastFoods: fastFoods,
-      drinks: drinks
-    });
+    res.render('index');
   } catch (err) {
-    res.status(500).send('Internal Server Error');
+    next(error)
   }
 });
 

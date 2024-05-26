@@ -2,18 +2,54 @@
 <html lang="en, kiswahili">
 <head>
     <meta charset="UTF-8">
+    <!-- Sets the character encoding for the document -->
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Ensures proper rendering and touch zooming on mobile devices -->
+
+    <meta name="description" content="Welcome to MiniEats Ke, your home away from home. Experience luxury, comfort, and exquisite cuisine in the heart of Kenya.">
+    <!-- Provides a brief description of the page, important for SEO -->
+
+    <meta name="keywords" content="hotel, MiniEats Ke, luxury hotel, Kenya, accommodation, restaurant, travel">
+    <!-- Keywords for SEO -->
+
+    <meta name="author" content="MiniEats Ke">
+    <!-- Specifies the author of the webpage -->
+
+    <meta property="og:title" content="MiniEats Ke - Your Luxury Hotel in Kenya">
+    <meta property="og:description" content="Experience luxury, comfort, and exquisite cuisine in the heart of Kenya at MiniEats Ke.">
+    <meta property="og:image" content="https://www.yourwebsite.com/images/og-image.jpg">
+    <meta property="og:url" content="https://www.yourwebsite.com">
+    <meta property="og:type" content="website">
+    <!-- Open Graph meta tags for better social media sharing -->
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="MiniEats Ke - Your Luxury Hotel in Kenya">
+    <meta name="twitter:description" content="Experience luxury, comfort, and exquisite cuisine in the heart of Kenya at MiniEats Ke.">
+    <meta name="twitter:image" content="https://www.yourwebsite.com/images/twitter-image.jpg">
+    <!-- Twitter Card meta tags -->
+
     <link rel="icon" href="/images/pp.jpg" type="image/x-icon">
+    <!-- Favicon for the website -->
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&display=swap" rel="stylesheet">
+    <!-- Preconnect to Google Fonts and include the Merienda font family -->
+
     <link rel="stylesheet" href="/css/styles.css">
-    <title>MiniEats Ke</title>
+    <!-- Link to the external stylesheet -->
+
+    <title>MiniEats Ke - Your Luxury Hotel in Kenya</title>
+    <!-- Title of the webpage displayed in the browser tab -->
+
 </head>
 
+<!-- Opening body tag and the rest of your HTML content would go here -->
 <body>
     <header>
-        <h1>Welcome to Our Canteen</h1>
+        <img src="/images/logo.png" alt="MiniEats Logo">
+        <h1>Contact Us</h1>
         <nav>
             <ul>
                 <li><a href="/">Home</a></li>
@@ -22,49 +58,39 @@
             </ul>
         </nav>
     </header>
+
     <main>
-        <section>
-            <h2>Main Dishes</h2>
-            <ul>
-                <% mainDishes.forEach(dish => { %>
-                    <li>
-                        <h3><%= dish.name %></h3>
-                        <p>Price: $<%= dish.price %></p>
-                        <p>Category: <%= dish.category %></p>
-                        <img src="<%= dish.imageUrl %>" alt="<%= dish.name %>">
-                    </li>
-                <% }) %>
-            </ul>
-        </section>
-        <section>
-            <h2>Fast Foods</h2>
-            <ul>
-                <% fastFoods.forEach(food => { %>
-                    <li>
-                        <h3><%= food.name %></h3>
-                        <p>Price: $<%= food.price %></p>
-                        <p>Category: <%= food.category %></p>
-                        <img src="<%= food.imageUrl %>" alt="<%= food.name %>">
-                    </li>
-                <% }) %>
-            </ul>
-        </section>
-        <section>
-            <h2>Drinks</h2>
-            <ul>
-                <% drinks.forEach(drink => { %>
-                    <li>
-                        <h3><%= drink.name %></h3>
-                        <p>Price: $<%= drink.price %></p>
-                        <p>Category: <%= drink.category %></p>
-                        <img src="<%= drink.imageUrl %>" alt="<%= drink.name %>">
-                    </li>
-                <% }) %>
-            </ul>
-        </section>
+        
     </main>
-    <footer>
-        <p>&copy; <%= new Date().getFullYear() %> Our Canteen</p>
+
+    <footer class="footer">
+        <div class="footer-content">
+          
+          <div class="footer-section links">
+            <h3>Quick Links</h3>
+            <ul>
+              <li><a href="/">Home</a></li>
+              <li><a href="/about">About</a></li>
+            </ul>
+          </div>
+          <div class="footer-section contact">
+            <h3>Contact Us</h3>
+            <p>Email: minieatske@gmail.com</p>
+            <p>Phone: +254797054212</p>
+          </div>
+          <div class="footer-section social">
+            <h3>Follow Us</h3>
+            <div class="social-icons">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"><FaFacebook /></a>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"><FaTwitter /></a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"><FaInstagram /></a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"><FaLinkedin /></a>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2024 minieatske. All rights reserved.</p>
+        </div>
     </footer>
 </body>
 </html>
