@@ -91,6 +91,32 @@ text-decoration: wavy underline;
   padding: 25px;
 }
 
+.main {
+  max-width: 960px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.description {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.guide {
+  background-color: #f4f4f4;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.guide h2 {
+  margin-top: 0;
+}
+
+.guide ul {
+  list-style-type: disc;
+  margin-left: 20px;
+}
+
 .admin-container {
 max-width: 600px;
 margin: 20px auto;
