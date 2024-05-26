@@ -11,15 +11,13 @@ router.get('/', async (req, res) => {
   }
 });
 
-
 router.get('/canteen', async (req, res) => {
-  const { category } = req.params;
   try {
-    const items = await Item.find({ category });
-    res.render('canteen', { items });
+      const items = await Item.find();  // Fetch items from MongoDB
+      res.render('canteen', { items });  // Render the template with items data
   } catch (err) {
-    console.error(err);
-    res.status(500).send('Internal Server Error');
+      console.error('Failed to fetch items', err);
+      res.status(500).send('Internal Server Error');
   }
 });
 

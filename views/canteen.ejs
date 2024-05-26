@@ -2,44 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Sets the character encoding for the document -->
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Ensures proper rendering and touch zooming on mobile devices -->
-
     <meta name="description" content="Welcome to MiniEats Ke, your home away from home. Experience luxury, comfort, and exquisite cuisine in the heart of Kenya.">
-    <!-- Provides a brief description of the page, important for SEO -->
-
     <meta name="keywords" content="hotel, MiniEats Ke, luxury hotel, Kenya, accommodation, restaurant, travel">
-    <!-- Keywords for SEO -->
-
     <meta name="author" content="MiniEats Ke">
-    <!-- Specifies the author of the webpage -->
-
     <meta property="og:title" content="MiniEats Ke - Your Luxury Hotel in Kenya">
     <meta property="og:description" content="Experience luxury, comfort, and exquisite cuisine in the heart of Kenya at MiniEats Ke.">
     <meta property="og:image" content="https://www.yourwebsite.com/images/og-image.jpg">
     <meta property="og:url" content="https://www.yourwebsite.com">
     <meta property="og:type" content="website">
-    <!-- Open Graph meta tags for better social media sharing -->
-
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="MiniEats Ke - Your Luxury Hotel in Kenya">
     <meta name="twitter:description" content="Experience luxury, comfort, and exquisite cuisine in the heart of Kenya at MiniEats Ke.">
     <meta name="twitter:image" content="https://www.yourwebsite.com/images/twitter-image.jpg">
-    <!-- Twitter Card meta tags -->
-
     <link rel="icon" href="/images/pp.jpg" type="image/x-icon">
-    <!-- Favicon for the website -->
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&display=swap" rel="stylesheet">
-    <!-- Preconnect to Google Fonts and include the Merienda font family -->
-
     <link rel="stylesheet" href="/css/styles.css">
-    <title>MiniEats Ke- Canteen</title>
- 
+    <title>MiniEats Ke - Canteen</title>
 </head>
 <body>
     <header>
@@ -77,15 +58,6 @@
         </ul>
     </main>
     <script>
-        // Pass the items array to your JavaScript file
-        const items = <%= JSON.stringify(items) %>;
-    </script>
-    <script>
-        // script.js
-    
-        // Access the items variable passed from the HTML file
-        console.log(items); // This should output the items array
-    
         function filterItems(category) {
             const items = document.querySelectorAll('.item');
             items.forEach(item => {
@@ -98,28 +70,5 @@
             });
         }
     </script>
-<script>
-    // Pass the items array to your JavaScript file
-    const items = <%= JSON.stringify(items) %>;
-</script>
-<script>
-    // script.js
-
-    // Access the items variable passed from the HTML file
-    console.log(items); // This should output the items array
-
-    function filterItems(category) {
-        const items = document.querySelectorAll('.item');
-        items.forEach(item => {
-            const categoryValue = item.getAttribute('data-category');
-            if (categoryValue === category || category === 'all') {
-                item.style.display = 'block';
-            } else {
-                item.style.display = 'none';
-            }
-        });
-    }
-</script>
-    
 </body>
 </html>
