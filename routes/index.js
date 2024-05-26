@@ -2,38 +2,35 @@ const express = require('express');
 const router = express.Router();
 const Item = require('../models/Item');
 
-
 router.get('/', async (req, res) => {
   try {
     res.render('index');
   } catch (err) {
-    next(error)
+    console.error(err);
+    res.status(500).send('Internal Server Error');
   }
 });
 
-router.get('/canteen', (req, res) => {
-  // Assuming Item.find() retrieves items from the database
-  Item.find()
-    .then(items => {
-      res.render('canteen', { items }); // Pass the items variable to the view
-    })
-    .catch(err => {
-      console.error('Error fetching items:', err);
-      res.status(500).send('Error fetching items');
-    });
+router.get('/canteen', async (req, res) => {
+  try {
+    const items = await Item.find();
+    res.render('canteen', { items });
+  } catch (err) {
+    console.error('Error fetching items:', err);
+    res.status(500).send('Error fetching items');
+  }
 });
 
 router.get('/category/:category', async (req, res) => {
   const { category } = req.params;
   try {
-      const items = await Item.find({ category });
-      res.render('canteen', { items });
+    const items = await Item.find({ category });
+    res.render('canteen', { items });
   } catch (err) {
-      console.error(err);
-      res.status(500).send('Internal Server Error');
+    console.error(err);
+    res.status(500).send('Internal Server Error');
   }
 });
-
 
 router.get('/contact', (req, res) => {
   res.render('contact');
@@ -47,23 +44,19 @@ router.post('/addProducts', async (req, res) => {
   const { name, price, category, imageUrl } = req.body;
 
   try {
-      const newItem = new Item({
-          name,
-          price,
-          category,
-          imageUrl
-      });
+    const newItem = new Item({
+      name,
+      price,
+      category,
+      imageUrl
+    });
 
-      await newItem.save();
-      res.redirect('/');
+    await newItem.save();
+    res.redirect('/canteen'); // Redirect to the canteen page after adding a new item
   } catch (error) {
-      console.error('Error adding product:', error);
-      res.status(500).send('Internal Server Error');
+    console.error('Error adding product:', error);
+    res.status(500).send('Internal Server Error');
   }
-
-  newItem.save()
-    .then(() => res.redirect('/canteen'))
-    .catch(err => res.status(400).send('Unable to save item to database'));
 });
 
 module.exports = router;

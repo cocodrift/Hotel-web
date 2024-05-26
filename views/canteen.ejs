@@ -42,34 +42,16 @@
     <script>
       function filterItems(category) {
     const items = document.querySelectorAll('.item');
-    const itemsByCategory = {};
-
-    // Group the items by category
     items.forEach(item => {
         const categoryValue = item.getAttribute('data-category');
-        if (!itemsByCategory[categoryValue]) {
-            itemsByCategory[categoryValue] = [];
+        if (categoryValue === category || category === 'all') {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
         }
-        itemsByCategory[categoryValue].push(item);
     });
-
-    // Clear the item list
-    const itemList = document.getElementById('item-list');
-    itemList.innerHTML = '';
-
-    // Display the items in the appropriate order
-    if (category === 'all') {
-        Object.values(itemsByCategory).flat().forEach(item => {
-            itemList.appendChild(item);
-        });
-    } else {
-        itemsByCategory[category].forEach(item => {
-            itemList.appendChild(item);
-        });
-    }
 }
-
-    </script>
+      </script>
 </head>
 <body>
     <header>
