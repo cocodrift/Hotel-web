@@ -23,6 +23,18 @@ router.get('/canteen', (req, res) => {
     });
 });
 
+router.get('/category/:category', async (req, res) => {
+  const { category } = req.params;
+  try {
+      const items = await Item.find({ category });
+      res.render('canteen', { items });
+  } catch (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
+  }
+});
+
+
 router.get('/contact', (req, res) => {
   res.render('contact');
 });

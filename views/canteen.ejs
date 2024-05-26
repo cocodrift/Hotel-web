@@ -1,14 +1,22 @@
 <!DOCTYPE html>
-<html lang="en, kiswahili">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="/images/pp.jpg" type="image/x-icon">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/styles.css">
-    <title>MiniEats Ke</title>
+    <title>MiniEats Ke- Canteen</title>
+    <script>
+        function filterItems(category) {
+            const items = document.querySelectorAll('.item');
+            items.forEach(item => {
+                const categoryValue = item.getAttribute('data-category');
+                if (categoryValue === category || category === 'all') {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    </script>
 </head>
 <body>
     <header>
@@ -23,17 +31,26 @@
         </nav>
     </header>
     <main>
-        <h2>Our Products</h2>
-        <ul>
-            <% for(let item of items) { %>
-                <li>
+        <h2>Our Meals</h2>
+        <div class="category-buttons">
+            <button onclick="filterItems('all')">All</button>
+            <button onclick="filterItems('breakfast')">Breakfast</button>
+            <button onclick="filterItems('lunch')">Lunch</button>
+            <button onclick="filterItems('dinner')">Dinner</button>
+            <button onclick="filterItems('beverages')">Beverages</button>
+            <button onclick="filterItems('desserts')">Desserts</button>
+            <button onclick="filterItems('Fast foods')">Fast foods</button>
+        </div>
+        <ul id="item-list">
+            <% items.forEach(item => { %>
+                <li class="item" data-category="<%= item.category %>">
                     <img src="<%= item.imageUrl %>" alt="<%= item.name %> Image">
                     <div>
                         <h3><%= item.name %></h3>
                         <p>$<%= item.price %></p>
                     </div>
                 </li>
-            <% } %>
+            <% }); %>
         </ul>
     </main>
 </body>
