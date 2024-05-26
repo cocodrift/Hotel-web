@@ -159,6 +159,7 @@
                         <p>$${item.price} x ${item.quantity}</p>
                     </div>
                     <button onclick="removeFromCart('${item.id}')">Remove</button>
+                    <button onclick="placeOrder()">Place Order</button>
                 `;
                 total += item.price * item.quantity;
                 cartList.appendChild(cartItem);
