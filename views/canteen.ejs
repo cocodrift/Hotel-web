@@ -81,7 +81,7 @@
                 }
             });
         }
-
+    
         function addToCart(id, name, price) {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
             const existingItemIndex = cart.findIndex(item => item.id === id);
@@ -94,7 +94,18 @@
             updateCartCount();
             displayAddToCartMessage(name);
         }
-
+    
+        function removeFromCart(id) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const itemIndex = cart.findIndex(item => item.id === id);
+            if (itemIndex > -1) {
+                cart.splice(itemIndex, 1);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                loadCart();
+                updateCartCount();
+            }
+        }
+    
         function displayAddToCartMessage(itemName) {
             const message = document.createElement('div');
             message.classList.add('cart-message');
@@ -102,7 +113,38 @@
             document.body.appendChild(message);
             setTimeout(() => message.remove(), 2000);
         }
+    
+        function placeOrder() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    fetch('/api/place-order', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ cart }),
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+        throw new Error('Failed to place order');
+    })
+    .then(data => {
+        // Handle successful order placement
+        console.log('Order placed successfully:', data);
+        localStorage.removeItem('cart');
+        loadCart(); // Update the cart display
+        updateCartCount(); // Update the cart count display
+        alert('Your order has been placed successfully!');
+    })
+    .catch(error => {
+        // Handle error
+        console.error('Error placing order:', error.message);
+        alert('Failed to place order. Please try again later.');
+    });
+}
 
+    
         function loadCart() {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
             const cartList = document.getElementById('cart-list');
@@ -116,6 +158,7 @@
                         <h3>${item.name}</h3>
                         <p>$${item.price} x ${item.quantity}</p>
                     </div>
+                    <button onclick="removeFromCart('${item.id}')">Remove</button>
                 `;
                 total += item.price * item.quantity;
                 cartList.appendChild(cartItem);
@@ -125,38 +168,39 @@
             totalElement.textContent = `Total: $${total.toFixed(2)}`;
             cartList.appendChild(totalElement);
         }
-
+    
         function updateCartCount() {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
             const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
             document.getElementById('cart-count').textContent = cartCount;
         }
-
+    
         // Modal logic
         const cartLink = document.getElementById('cart-link');
         const cartModal = document.getElementById('cart-modal');
         const closeCartModal = document.getElementById('close-cart-modal');
-
+    
         cartLink.onclick = function(event) {
             event.preventDefault();
             cartModal.style.display = 'block';
             loadCart();
         };
-
+    
         closeCartModal.onclick = function() {
             cartModal.style.display = 'none';
         };
-
+    
         window.onclick = function(event) {
             if (event.target === cartModal) {
                 cartModal.style.display = 'none';
             }
         };
-
+    
         document.addEventListener('DOMContentLoaded', () => {
             loadCart();
             updateCartCount();
         });
     </script>
+    
 </body>
 </html>
