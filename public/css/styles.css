@@ -102,6 +102,13 @@ text-decoration: wavy underline;
   margin-bottom: 30px;
 }
 
+.description-card {
+  background-color: #f4f4f4;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .guide {
   background-color: #f4f4f4;
   padding: 20px;
