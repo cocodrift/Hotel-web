@@ -72,51 +72,56 @@
     </div>
 
     <script>
-        function filterItems(category) {
-            const items = document.querySelectorAll('.item');
-            items.forEach(item => {
-                const categoryValue = item.getAttribute('data-category');
-                if (categoryValue === category || category === 'all') {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
+       function filterItems(category) {
+    const items = document.querySelectorAll('.item');
+    items.forEach(item => {
+        const categories = item.getAttribute('data-category').split(' ');
+        if (categories.includes(category) || category === 'all') {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
         }
+    });
+}
+
     
-        function addToCart(id, name, price) {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const existingItemIndex = cart.findIndex(item => item.id === id);
-            if (existingItemIndex > -1) {
-                cart[existingItemIndex].quantity += 1;
-            } else {
-                cart.push({ id, name, price, quantity: 1 });
-            }
-            localStorage.setItem('cart', JSON.stringify(cart));
-            updateCartCount();
-            displayAddToCartMessage(name);
+function addToCart(id, name, price) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const existingItemIndex = cart.findIndex(item => item.id === id);
+    if (existingItemIndex > -1) {
+        cart[existingItemIndex].quantity += 1;
+    } else {
+        cart.push({ id, name, price, quantity: 1 });
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+    displayAddToCartMessage(name);
+}
+
+function removeFromCart(id) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const itemIndex = cart.findIndex(item => item.id === id);
+    if (itemIndex > -1) {
+        if (cart[itemIndex].quantity > 1) {
+            cart[itemIndex].quantity -= 1;
+        } else {
+            cart.splice(itemIndex, 1);
         }
-    
-        function removeFromCart(id) {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const itemIndex = cart.findIndex(item => item.id === id);
-            if (itemIndex > -1) {
-                cart.splice(itemIndex, 1);
-                localStorage.setItem('cart', JSON.stringify(cart));
-                loadCart();
-                updateCartCount();
-            }
-        }
-    
-        function displayAddToCartMessage(itemName) {
-            const message = document.createElement('div');
-            message.classList.add('cart-message');
-            message.textContent = `${itemName} has been added to your cart.`;
-            document.body.appendChild(message);
-            setTimeout(() => message.remove(), 2000);
-        }
-    
-        function placeOrder() {
+        localStorage.setItem('cart', JSON.stringify(cart));
+        loadCart();
+        updateCartCount();
+    }
+}
+
+function displayAddToCartMessage(itemName) {
+    const message = document.createElement('div');
+    message.classList.add('cart-message');
+    message.textContent = `${itemName} has been added to your cart.`;
+    document.body.appendChild(message);
+    setTimeout(() => message.remove(), 2000);
+}
+
+function placeOrder() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     fetch('/place-order', {
         method: 'POST',
@@ -132,76 +137,74 @@
         throw new Error('Failed to place order');
     })
     .then(data => {
-        // Handle successful order placement
         console.log('Order placed successfully:', data);
         localStorage.removeItem('cart');
-        loadCart(); // Update the cart display
-        updateCartCount(); // Update the cart count display
+        loadCart();
+        updateCartCount();
         alert('Your order has been placed successfully!');
     })
     .catch(error => {
-        // Handle error
         console.error('Error placing order:', error.message);
         alert('Failed to place order. Please try again later.');
     });
 }
 
-    
-        function loadCart() {
-            let cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const cartList = document.getElementById('cart-list');
-            cartList.innerHTML = '';
-            let total = 0;
-            cart.forEach(item => {
-                const cartItem = document.createElement('li');
-                cartItem.classList.add('cart-item');
-                cartItem.innerHTML = `
-                    <div>
-                        <h3>${item.name}</h3>
-                        <p>$${item.price} x ${item.quantity}</p>
-                    </div>
-                    <button onclick="removeFromCart('${item.id}')">Remove</button>
-                `;
-                total += item.price * item.quantity;
-                cartList.appendChild(cartItem);
-            });
-            const totalElement = document.createElement('div');
-            totalElement.classList.add('total');
-            totalElement.textContent = `Total: $${total.toFixed(2)}`;
-            cartList.appendChild(totalElement);
-        }
-    
-        function updateCartCount() {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
-            document.getElementById('cart-count').textContent = cartCount;
-        }
-    
-        // Modal logic
-        const cartLink = document.getElementById('cart-link');
-        const cartModal = document.getElementById('cart-modal');
-        const closeCartModal = document.getElementById('close-cart-modal');
-    
-        cartLink.onclick = function(event) {
-            event.preventDefault();
-            cartModal.style.display = 'block';
-            loadCart();
-        };
-    
-        closeCartModal.onclick = function() {
-            cartModal.style.display = 'none';
-        };
-    
-        window.onclick = function(event) {
-            if (event.target === cartModal) {
-                cartModal.style.display = 'none';
-            }
-        };
-    
-        document.addEventListener('DOMContentLoaded', () => {
-            loadCart();
-            updateCartCount();
-        });
+function loadCart() {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cartList = document.getElementById('cart-list');
+    cartList.innerHTML = '';
+    let total = 0;
+    cart.forEach(item => {
+        const cartItem = document.createElement('li');
+        cartItem.classList.add('cart-item');
+        cartItem.innerHTML = `
+            <div>
+                <h3>${item.name}</h3>
+                <p>$${item.price} x ${item.quantity}</p>
+            </div>
+            <button onclick="removeFromCart('${item.id}')">Remove</button>
+        `;
+        total += item.price * item.quantity;
+        cartList.appendChild(cartItem);
+    });
+    const totalElement = document.createElement('div');
+    totalElement.classList.add('total');
+    totalElement.textContent = `Total: $${total.toFixed(2)}`;
+    cartList.appendChild(totalElement);
+}
+
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
+    document.getElementById('cart-count').textContent = cartCount;
+}
+
+// Modal logic
+const cartLink = document.getElementById('cart-link');
+const cartModal = document.getElementById('cart-modal');
+const closeCartModal = document.getElementById('close-cart-modal');
+
+cartLink.onclick = function(event) {
+    event.preventDefault();
+    cartModal.style.display = 'block';
+    loadCart();
+};
+
+closeCartModal.onclick = function() {
+    cartModal.style.display = 'none';
+};
+
+window.onclick = function(event) {
+    if (event.target === cartModal) {
+        cartModal.style.display = 'none';
+    }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadCart();
+    updateCartCount();
+});
+
     </script>
     
 </body>
