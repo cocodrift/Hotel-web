@@ -11,15 +11,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/canteen', async (req, res) => {
-  try {
-    const items = await Item.find();
-    res.render('canteen', { items });
-  } catch (err) {
-    console.error('Error fetching items:', err);
-    res.status(500).send('Error fetching items');
-  }
-});
 
 router.get('/canteen/:category', async (req, res) => {
   const { category } = req.params;
