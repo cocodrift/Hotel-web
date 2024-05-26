@@ -20,30 +20,6 @@ router.get('/canteen', async (req, res) => {
       res.status(500).send('Internal Server Error');
   }
 });
-// Dummy cart for simplicity (in a real app, use session or database)
-let cart = [];
-
-// Route to add items to cart
-router.post('/cart/add', async (req, res) => {
-    const itemId = req.body.id;
-    try {
-        const item = await Item.findById(itemId);
-        if (item) {
-            cart.push(item);  // Add item to cart
-            res.json({ success: true });
-        } else {
-            res.json({ success: false });
-        }
-    } catch (err) {
-        console.error('Failed to add item to cart', err);
-        res.status(500).send('Internal Server Error');
-    }
-});
-
-// Route to view cart
-router.get('/cart', (req, res) => {
-    res.render('cart', { cart });  // Render the cart template with cart data
-});
 
 
 router.get('/contact', (req, res) => {
