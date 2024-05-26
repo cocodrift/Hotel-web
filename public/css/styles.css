@@ -53,39 +53,69 @@ text-decoration: wavy underline;
   border-radius: 5px;
 }
 
-/* Categories styles */
-.categories {
+.category-buttons {
   text-align: center;
-  padding: 50px 0;
+  margin-bottom: 1rem;
 }
 
-/* Ensure images in the body are of the same width and height */
-.row img {
-  width: 100%;
-  height: 200px;
-  transition: border 0.3s;
-  margin-right: 10px;
-  margin-left: 10px;
+.category-buttons button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  border-radius: 5px;
+  transition: background-color 0.3s;
 }
 
-/* Add a border to images on hover */
-.row img:hover {
-  border: 2px solid orange;
-  border-radius: 5px; 
+.category-buttons button:hover {
+  background-color: #45a049;
 }
 
-/* Display images in rows of 4 */
-.row {
+/* Styles for the item list and cards */
+#item-list {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  margin-bottom: 20px 0;
-  overflow: hidden;
-  width: calc(25%-2opx);
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+  list-style: none;
 }
 
-.headerr {
-  padding: 25px;
+.item {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 250px;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.item img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.item div {
+  padding: 1rem;
+}
+
+.item h3 {
+  margin: 0.5rem 0;
+}
+
+.item p {
+  color: #888;
+  font-size: 1.2rem;
+}
+
+.item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .main {
