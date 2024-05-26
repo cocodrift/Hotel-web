@@ -10,113 +10,61 @@
     <link rel="stylesheet" href="/css/styles.css">
     <title>MiniEats Ke</title>
 </head>
+
 <body>
-    <div class="header">
-        <div class="navbar">
-            <div class="logo">
-                <a href="/"><img src="/images/logo.png" width="100px" alt="MiniEats Ke Logo"></a>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/canteen">Canteen</a></li>
-                    <li><a href="/specials">Specials</a></li>
-                    <li><a href="/contact">Contact</a></li>
-                </ul> 
-            </nav>
-        </div>
-        <h1>Welcome to MiniEats - Your tasty take out Spot!</h1>
-    </div>
+    <header>
+        <h1>Welcome to Our Canteen</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/canteen">Canteen</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
     <main>
-        <!-- Main Dishes -->
-        <div class="categories">
+        <section>
             <h2>Main Dishes</h2>
-            <div class="small-container">
-                <div id="main-items">
-                    <% if (mainDishes && mainDishes.length > 0) { %>
-                        <ul>
-                            <% mainDishes.forEach(item => { %>
-                                <li>
-                                    <img src="<%= item.imageUrl %>" alt="<%= item.name %>" width="100">
-                                    <%= item.name %> - $<%= item.price %>
-                                </li>
-                            <% }); %>
-                        </ul>
-                    <% } else { %>
-                        <p>No main dishes available</p>
-                    <% } %>
-                </div>
-            </div>
-        </div>
-
-        <!-- Fast Foods -->
-        <div class="categories">
+            <ul>
+                <% mainDishes.forEach(dish => { %>
+                    <li>
+                        <h3><%= dish.name %></h3>
+                        <p>Price: $<%= dish.price %></p>
+                        <p>Category: <%= dish.category %></p>
+                        <img src="<%= dish.imageUrl %>" alt="<%= dish.name %>">
+                    </li>
+                <% }) %>
+            </ul>
+        </section>
+        <section>
             <h2>Fast Foods</h2>
-            <div class="small-container">
-                <div id="fast-items">
-                    <% if (fastFoods && fastFoods.length > 0) { %>
-                        <ul>
-                            <% fastFoods.forEach(item => { %>
-                                <li>
-                                    <img src="<%= item.imageUrl %>" alt="<%= item.name %>" width="100">
-                                    <%= item.name %> - $<%= item.price %>
-                                </li>
-                            <% }); %>
-                        </ul>
-                    <% } else { %>
-                        <p>No fast foods available</p>
-                    <% } %>
-                </div>
-            </div>
-        </div>
-
-        <!-- Drinks -->
-        <div class="categories">
+            <ul>
+                <% fastFoods.forEach(food => { %>
+                    <li>
+                        <h3><%= food.name %></h3>
+                        <p>Price: $<%= food.price %></p>
+                        <p>Category: <%= food.category %></p>
+                        <img src="<%= food.imageUrl %>" alt="<%= food.name %>">
+                    </li>
+                <% }) %>
+            </ul>
+        </section>
+        <section>
             <h2>Drinks</h2>
-            <div class="small-container">
-                <div id="drink-items">
-                    <% if (drinks && drinks.length > 0) { %>
-                        <ul>
-                            <% drinks.forEach(item => { %>
-                                <li>
-                                    <img src="<%= item.imageUrl %>" alt="<%= item.name %>" width="100">
-                                    <%= item.name %> - $<%= item.price %>
-                                </li>
-                            <% }); %>
-                        </ul>
-                    <% } else { %>
-                        <p>No drinks available</p>
-                    <% } %>
-                </div>
-            </div>
-        </div>
+            <ul>
+                <% drinks.forEach(drink => { %>
+                    <li>
+                        <h3><%= drink.name %></h3>
+                        <p>Price: $<%= drink.price %></p>
+                        <p>Category: <%= drink.category %></p>
+                        <img src="<%= drink.imageUrl %>" alt="<%= drink.name %>">
+                    </li>
+                <% }) %>
+            </ul>
+        </section>
     </main>
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section links">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="/contact">Contact</a></li>
-                </ul>
-            </div>
-            <div class="footer-section contact">
-                <h3>Contact Us</h3>
-                <p>Email: minieatske@gmail.com</p>
-                <p>Phone: +254797054212</p>
-            </div>
-            <div class="footer-section social">
-                <h3>Follow Us</h3>
-                <div class="social-icons">
-                    <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
-                    <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
-                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
-                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 minieatske. All rights reserved.</p>
-        </div>
+    <footer>
+        <p>&copy; <%= new Date().getFullYear() %> Our Canteen</p>
     </footer>
 </body>
 </html>

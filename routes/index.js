@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const Item = require('../models/Item');
-const Category = require('../models/Category');
 
 
 router.get('/', async (req, res) => {
@@ -40,13 +39,23 @@ router.get('/addProducts', (req, res) => {
   res.render('addProducts');
 });
 
-router.post('/addProducts', (req, res) => {
-  const newItem = new Item({
-    name: req.body.name,
-    price: req.body.price,
-    category: req.body.category,
-    imageUrl: req.body.imageUrl, // Add the imageUrl field
-  });
+router.post('/addProducts', async (req, res) => {
+  const { name, price, category, imageUrl } = req.body;
+
+  try {
+      const newItem = new Item({
+          name,
+          price,
+          category,
+          imageUrl
+      });
+
+      await newItem.save();
+      res.redirect('/');
+  } catch (error) {
+      console.error('Error adding product:', error);
+      res.status(500).send('Internal Server Error');
+  }
 
   newItem.save()
     .then(() => res.redirect('/canteen'))
