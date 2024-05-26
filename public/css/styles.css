@@ -7,53 +7,58 @@ body {
   color: #333;
 }
 
-img{
+img {
   border-radius: 10px;
-
+  max-width: 100%;  /* Ensure images are responsive */
+  height: auto;
 }
 
 main {
-background-color: #fff;
+  background-color: #fff;
+  padding: 20px;
 }
 
-main h2{
-text-decoration: underline;
+main h2 {
+  text-decoration: underline;
 }
 
 .header {
-text-align: center;
-border-radius: 10px;
+  text-align: center;
+  border-radius: 10px;
 }
 
 /* Navbar styles */
 .navbar {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  border-bottom:2px solid black;
+  border-bottom: 2px solid black;
   border-radius: 10px;
 }
 
 .navbar img {
-  width: 50px; 
+  width: 50px;
   border-radius: 50%;
 }
 
 nav ul {
   list-style: none;
   display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 nav a {
   text-decoration: none;
-  color:black;
+  color: black;
   margin: 0 15px;
   position: relative;
 }
 
 nav a:hover {
-text-decoration: wavy underline;
+  text-decoration: wavy underline;
   padding: 10px;
   border-radius: 5px;
 }
@@ -73,7 +78,8 @@ text-decoration: wavy underline;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  width: 80%;
+  width: 100%;
+  max-width: 500px; /* Set a max-width to ensure it doesn't stretch too much */
   display: flex;
   align-items: center;
   transition: transform 0.3s, box-shadow 0.3s;
@@ -146,7 +152,8 @@ text-decoration: wavy underline;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  width: 250px;
+  width: 100%;
+  max-width: 250px; /* Ensure items don't stretch too much */
   text-align: center;
   transition: transform 0.3s, box-shadow 0.3s;
 }
@@ -209,46 +216,46 @@ text-decoration: wavy underline;
 }
 
 .admin-container {
-max-width: 600px;
-margin: 20px auto;
-padding: 20px;
-border: 1px solid #ddd;
-border-radius: 5px;
-background-color: #fff;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
 }
 
 .admin-container h2 {
-margin-top: 0;
+  margin-top: 0;
 }
 
 .admin-container form {
-display: flex;
-flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .admin-container label {
-margin-top: 10px;
+  margin-top: 10px;
 }
 
 .admin-container input,
 .admin-container select,
 .admin-container button {
-padding: 10px;
-margin-top: 5px;
-border: 1px solid #ddd;
-border-radius: 3px;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
 }
 
 .admin-container button {
-background-color: #007bff;
-color: #fff;
-border: none;
-cursor: pointer;
-margin-top: 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  margin-top: 20px;
 }
 
 .admin-container button:hover {
-background-color: #0056b3;
+  background-color: #0056b3;
 }
 
 /* Contact form styles */
@@ -282,7 +289,7 @@ background-color: #0056b3;
 
 .contact-form input[type="submit"] {
   background-color: #333;
-  color:black;
+  color: black;
   border: none;
   cursor: pointer;
 }
@@ -300,7 +307,7 @@ footer {
   text-align: center;
   border-top: 2px solid black;
   border-radius: 10px;
-  box-shadow: inset;
+  padding: 20px;
 }
 
 .footer-content {
@@ -321,7 +328,9 @@ footer {
   margin-bottom: 15px;
 }
 
-.footer-section p, .footer-section ul, .footer-section a {
+.footer-section p,
+.footer-section ul,
+.footer-section a {
   color: #0f0f0f;
 }
 
@@ -363,4 +372,62 @@ footer {
   margin-top: 20px;
   border-top: 1px solid #444;
   padding-top: 10px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  nav ul {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  nav a {
+    margin: 10px 0;
+  }
+
+  .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .item {
+    width: 100%;
+    max-width: none;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer-section {
+    min-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 10px;
+  }
+
+  .cart-item {
+    padding: 10px;
+  }
+
+  .item {
+    padding: 10px;
+  }
+
+  .admin-container {
+    padding: 10px;
+  }
+
+  .contact-form {
+    padding: 10px;
+  }
 }
