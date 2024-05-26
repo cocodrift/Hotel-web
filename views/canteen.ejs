@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en, kiswahili">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <!-- Sets the character encoding for the document -->
@@ -40,17 +40,35 @@
     <link rel="stylesheet" href="/css/styles.css">
     <title>MiniEats Ke- Canteen</title>
     <script>
-        function filterItems(category) {
-            const items = document.querySelectorAll('.item');
-            items.forEach(item => {
-                const categoryValue = item.getAttribute('data-category');
-                if (categoryValue === category || category === 'all') {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
+      function filterItems(category) {
+    const items = document.querySelectorAll('.item');
+    const itemsByCategory = {};
+
+    // Group the items by category
+    items.forEach(item => {
+        const categoryValue = item.getAttribute('data-category');
+        if (!itemsByCategory[categoryValue]) {
+            itemsByCategory[categoryValue] = [];
         }
+        itemsByCategory[categoryValue].push(item);
+    });
+
+    // Clear the item list
+    const itemList = document.getElementById('item-list');
+    itemList.innerHTML = '';
+
+    // Display the items in the appropriate order
+    if (category === 'all') {
+        Object.values(itemsByCategory).flat().forEach(item => {
+            itemList.appendChild(item);
+        });
+    } else {
+        itemsByCategory[category].forEach(item => {
+            itemList.appendChild(item);
+        });
+    }
+}
+
     </script>
 </head>
 <body>
