@@ -20,78 +20,37 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/styles.css">
-    <title>MiniEats Ke - Canteen</title>
+    <title>MiniEats Ke - Cart</title>
 </head>
 <body>
     <header>
         <img src="/images/logo.png" alt="MiniEats Logo">
-        <h1>Canteen</h1>
+        <h1>Cart</h1>
         <nav>
             <ul>
                 <li><a href="/">Home</a></li>
                 <li><a href="/canteen">Canteen</a></li>
-                <li><a href="/cart">Cart</a></li> <!-- Add link to Cart -->
+                <li><a href="/cart">Cart</a></li>
                 <li><a href="/contact">Contact</a></li>
             </ul>
         </nav>
     </header>
     <main>
-        <h2>Our Meals</h2>
-        <section class="category-buttons">
-            <button onclick="filterItems('all')">All</button>
-            <button onclick="filterItems('breakfast')">Breakfast</button>
-            <button onclick="filterItems('lunch')">Lunch</button>
-            <button onclick="filterItems('dinner')">Dinner</button>
-            <button onclick="filterItems('beverages')">Beverages</button>
-            <button onclick="filterItems('desserts')">Desserts</button>
-            <button onclick="filterItems('Fast foods')">Fast foods</button>
-        </section>
-        <ul id="item-list">
-            <% items.forEach(item => { %>
-                <li class="item" data-category="<%= item.category %>">
+        <h2>Your Cart</h2>
+        <ul id="cart-list">
+            <% cart.forEach(item => { %>
+                <li class="cart-item">
                     <img src="<%= item.imageUrl %>" alt="<%= item.name %> Image">
                     <div>
                         <h3><%= item.name %></h3>
                         <p>$<%= item.price %></p>
-                        <button onclick="addToCart('<%= item._id %>')">Add to Cart</button> <!-- Add to Cart button -->
                     </div>
                 </li>
             <% }); %>
         </ul>
+        <div class="total">
+            <h3>Total: $<%= cart.reduce((sum, item) => sum + item.price, 0).toFixed(2) %></h3>
+        </div>
     </main>
-    <script>
-        function filterItems(category) {
-            const items = document.querySelectorAll('.item');
-            items.forEach(item => {
-                const categoryValue = item.getAttribute('data-category');
-                if (categoryValue === category || category === 'all') {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        }
-
-        function addToCart(itemId) {
-            fetch('/cart/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ id: itemId }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Item added to cart');
-                } else {
-                    alert('Failed to add item to cart');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
-    </script>
 </body>
 </html>
