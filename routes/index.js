@@ -21,7 +21,7 @@ router.get('/canteen', async (req, res) => {
   }
 });
 
-router.get('/category/:category', async (req, res) => {
+router.get('/canteen/:category', async (req, res) => {
   const { category } = req.params;
   try {
     const items = await Item.find({ category });
