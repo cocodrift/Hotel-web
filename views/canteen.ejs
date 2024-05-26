@@ -48,7 +48,7 @@
         </section>
         <ul id="item-list">
             <% items.forEach(item => { %>
-                <li class="item" data-category="<%= item.category %>">
+                <li class="item" data-categories="<%= item.category.join(' ') %>">
                     <img src="<%= item.imageUrl %>" alt="<%= item.name %> Image">
                     <div>
                         <h3><%= item.name %></h3>
