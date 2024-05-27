@@ -36,9 +36,9 @@
         <h2>Orders</h2>
         <ul id="order-list">
             <% orders.forEach(order => { %>
-                <li class="order">
+                <li class="order" id="order-<%= order.orderNumber %>">
                     <h3>Order Number: <%= order.orderNumber %></h3>
-                    <p>Table: <%=order.tableNumber %></p>
+                    <p>Table: <%= order.tableNumber %></p>
                     <p>Placed At: <%= order.placedAt.toLocaleString() %></p>
                     <p>Total Price: <%= new Intl.NumberFormat('en-KE', { style: 'currency', currency: 'KES' }).format(order.totalPrice) %></p>
                     <h4>Items:</h4>
@@ -52,6 +52,7 @@
                     <form action="/orders/clear/<%= order._id %>" method="POST">
                         <button type="submit">Mark as Cleared</button>
                     </form>
+                    <button type="button" onclick="printOrder(<%= order.orderNumber %>)">Print Order</button>
                 </li>
             <% }); %>
         </ul>
@@ -84,5 +85,18 @@
             <p>&copy; 2024 MiniEats Ke. All rights reserved.</p>
         </div>
     </footer>
+    <script>
+        function printOrder(orderNumber) {
+            const orderElement = document.getElementById(`order-${orderNumber}`);
+            const printWindow = window.open('', '', 'height=400,width=600');
+            printWindow.document.write('<html><head><title>Print Order</title>');
+            printWindow.document.write('<link rel="stylesheet" href="/css/styles.css" type="text/css" />');
+            printWindow.document.write('</head><body >');
+            printWindow.document.write(orderElement.outerHTML);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+    </script>
 </body>
 </html>
