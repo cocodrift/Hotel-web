@@ -49,4 +49,42 @@ router.post('/addProducts', async (req, res) => {
   }
 });
 
+// Edit Product Route - Display Edit Form
+router.get('/editProduct/:id', async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) {
+      return res.status(404).send('Product not found');
+    }
+    res.render('editProduct', { item });
+  } catch (err) {
+    console.error('Error fetching product:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// Edit Product Route - Handle Form Submission
+router.post('/editProduct/:id', async (req, res) => {
+  const { name, price, category, imageUrl } = req.body;
+
+  try {
+    const item = await Item.findByIdAndUpdate(req.params.id, {
+      name,
+      price,
+      category,
+      imageUrl
+    }, { new: true });
+
+    if (!item) {
+      return res.status(404).send('Product not found');
+    }
+
+    res.redirect('/canteen');
+  } catch (error) {
+    console.error('Error updating product:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
 module.exports = router;
