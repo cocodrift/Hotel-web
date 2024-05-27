@@ -14,12 +14,17 @@ router.get('/', async (req, res) => {
 router.get('/canteen', async (req, res) => {
   try {
     const items = await Item.find();
-      res.render('canteen', { items });
+    const itemsWithPricesInKES = items.map(item => ({
+      ...item.toObject(),
+      priceKES: item.priceKES.toLocaleString('en-US', { style: 'currency', currency: 'KES' })
+    }));
+    res.render('canteen', { items: itemsWithPricesInKES });
   } catch (err) {
     console.error('Error fetching items:', err);
     res.status(500).send('Error fetching items');
   }
 });
+
 
 
 router.get('/contact', (req, res) => {
