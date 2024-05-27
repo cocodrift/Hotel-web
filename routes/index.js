@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Item = require('../models/Item');
+const Order = require('../models/Order');
+
 
 router.get('/', async (req, res) => {
   try {
@@ -50,6 +52,33 @@ router.post('/addProducts', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+// POST route to handle placing orders
+router.post('/place-order', async (req, res) => {
+  const { cart, customer } = req.body;
+
+  try {
+      // Create a new order instance
+      const newOrder = new Order({
+          items: cart.map(item => ({
+              productId: item.productId,
+              quantity: item.quantity
+          })),
+          totalPrice: calculateTotalPrice(cart), // Define your own function to calculate total price
+          customer,
+          status: 'pending' // You can set an initial status if needed
+      });
+
+      // Save the order to the database
+      await newOrder.save();
+
+      res.status(200).json({ message: 'Order placed successfully!', order: newOrder });
+  } catch (error) {
+      console.error('Error placing order:', error);
+      res.status(500).json({ error: 'Failed to place order. Please try again later.' });
+  }
+});
+
 
 
 // GET route to render the editProduct form
