@@ -39,7 +39,9 @@ router.get('/addProducts', (req, res) => {
 });
 
 router.post('/addProducts', async (req, res) => {
-  const { name, priceInKES, category, imageUrl, currency } = req.body;
+  const { name, category, imageUrl, currency } = req.body;
+  const priceInKES = parseFloat(req.body.priceInKES);
+
 
   try {
     const convertedPrice = await convertCurrency(priceInKES, 'KES', 'USD');
