@@ -36,7 +36,7 @@ router.get('/addProducts', (req, res) => {
 });
 
 router.post('/addProducts', async (req, res) => {
-  const { name, price, category, imageUrl } = req.body;
+  const { name, priceKES, category, imageUrl } = req.body;
 
   try {
     const newItem = new Item({
