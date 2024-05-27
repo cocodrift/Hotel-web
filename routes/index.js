@@ -1,12 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const Item = require('../models/Item');
+const Item = require('../models/Item'); // Ensure this path is correct
+
+// Middleware to log requests
+const morgan = require('morgan');
+router.use(morgan('dev'));
 
 router.get('/', async (req, res) => {
   try {
     res.render('index');
   } catch (err) {
-    console.error(err);
+    console.error('Error rendering index:', err);
     res.status(500).send('Internal Server Error');
   }
 });
@@ -21,13 +25,22 @@ router.get('/canteen', async (req, res) => {
   }
 });
 
-
 router.get('/contact', (req, res) => {
-  res.render('contact');
+  try {
+    res.render('contact');
+  } catch (err) {
+    console.error('Error rendering contact:', err);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 router.get('/addProducts', (req, res) => {
-  res.render('addProducts');
+  try {
+    res.render('addProducts');
+  } catch (err) {
+    console.error('Error rendering addProducts:', err);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 router.post('/addProducts', async (req, res) => {
@@ -37,12 +50,12 @@ router.post('/addProducts', async (req, res) => {
     const newItem = new Item({
       name,
       price,
-      category,
+      category: Array.isArray(category) ? category : [category], // Ensure category is an array
       imageUrl
     });
 
     await newItem.save();
-    res.redirect('/canteen'); // Redirect to the canteen page after adding a new item
+    res.redirect('/canteen');
   } catch (error) {
     console.error('Error adding product:', error);
     res.status(500).send('Internal Server Error');
