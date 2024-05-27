@@ -49,7 +49,7 @@ router.post('/addProducts', async (req, res) => {
 });
 
 // Edit Product Route - Display Edit Form with All Products
-router.get('/editProduct/:id', async (req, res) => {
+router.get('/editProduct/', async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
     const items = await Item.find();
