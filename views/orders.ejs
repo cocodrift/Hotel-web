@@ -38,6 +38,7 @@
             <% orders.forEach(order => { %>
                 <li class="order">
                     <h3>Order Number: <%= order.orderNumber %></h3>
+                    <p>Table: <%=order.tableNumber %></p>
                     <p>Placed At: <%= order.placedAt.toLocaleString() %></p>
                     <p>Total Price: <%= new Intl.NumberFormat('en-KE', { style: 'currency', currency: 'KES' }).format(order.totalPrice) %></p>
                     <h4>Items:</h4>
