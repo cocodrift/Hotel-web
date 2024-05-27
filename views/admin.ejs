@@ -27,6 +27,9 @@
           <td><img src="<%= item.imageUrl %>" alt="<%= item.name %>"></td>
           <td>
             <a href="/editProduct/<%= item._id %>">Edit</a> <!-- Edit button -->
+            <form action="/deleteProduct/<%= item._id %>" method="POST" style="display:inline;">
+              <button type="submit">Delete</button> <!-- Delete button -->
+            </form>
           </td>
         </tr>
       <% }) %>
