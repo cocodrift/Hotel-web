@@ -14,17 +14,12 @@ router.get('/', async (req, res) => {
 router.get('/canteen', async (req, res) => {
   try {
     const items = await Item.find();
-    const itemsWithPricesInKES = items.map(item => ({
-      ...item.toObject(),
-      priceKES: item.priceKES.toLocaleString('en-US', { style: 'currency', currency: 'KES' })
-    }));
-    res.render('canteen', { items: itemsWithPricesInKES });
+      res.render('canteen', { items });
   } catch (err) {
     console.error('Error fetching items:', err);
     res.status(500).send('Error fetching items');
   }
 });
-
 
 
 router.get('/contact', (req, res) => {
@@ -36,12 +31,12 @@ router.get('/addProducts', (req, res) => {
 });
 
 router.post('/addProducts', async (req, res) => {
-  const { name, priceKES, category, imageUrl } = req.body;
+  const { name, price, category, imageUrl } = req.body;
 
   try {
     const newItem = new Item({
       name,
-      priceKES,
+      price,
       category,
       imageUrl
     });

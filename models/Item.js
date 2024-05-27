@@ -5,7 +5,7 @@ const itemSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  priceKES: {
+  price: {
     type: Number,
     required: true
   },
