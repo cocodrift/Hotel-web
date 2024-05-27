@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Item = require('../models/Item');
 const convertCurrency = require('../utils/currencyConverter');
+const Product = require('../models/product');
 
 router.get('/', async (req, res) => {
   try {
@@ -64,7 +65,7 @@ router.post('/addProducts', async (req, res) => {
 });
 
 
-
+// GET route to render the editProduct form
 router.get('/editProduct/:id', async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
@@ -79,21 +80,25 @@ router.get('/editProduct/:id', async (req, res) => {
   }
 });
 
+// POST route to update product details and description
 router.post('/editProduct/:id', async (req, res) => {
-  const { name, price, category, imageUrl } = req.body;
+  const { id } = req.params;
+  const { name, price, category, imageUrl, description } = req.body;
 
   try {
-    const item = await Item.findByIdAndUpdate(req.params.id, {
+    const updatedProduct = await Item.findByIdAndUpdate(id, {
       name,
       price,
       category,
-      imageUrl
+      imageUrl,
+      description
     }, { new: true });
 
-    if (!item) {
+    if (!updatedProduct) {
       return res.status(404).send('Product not found');
     }
 
+    // Redirect to admin page after successful update
     res.redirect('/admin');
   } catch (error) {
     console.error('Error updating product:', error);
