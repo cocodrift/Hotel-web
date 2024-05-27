@@ -16,7 +16,7 @@ router.get('/canteen', async (req, res) => {
   try {
     const items = await Item.find();
     const itemsWithPricesInKES = await Promise.all(items.map(async (item) => {
-      const convertedPrice = await convertToKES(item.price);
+      const convertedPrice = await convertCurrency(item.price, 'USD', 'KES'); // Update to convert to KES
       return {
         ...item.toObject(),
         price: convertedPrice,
@@ -29,6 +29,7 @@ router.get('/canteen', async (req, res) => {
     res.status(500).send('Error fetching items');
   }
 });
+
 
 router.get('/contact', (req, res) => {
   res.render('contact');
