@@ -14,13 +14,12 @@ router.get('/', async (req, res) => {
 router.get('/canteen', async (req, res) => {
   try {
     const items = await Item.find();
-      res.render('canteen', { items });
+    res.render('canteen', { items });
   } catch (err) {
     console.error('Error fetching items:', err);
     res.status(500).send('Error fetching items');
   }
 });
-
 
 router.get('/contact', (req, res) => {
   res.render('contact');
@@ -49,14 +48,15 @@ router.post('/addProducts', async (req, res) => {
   }
 });
 
-// Edit Product Route - Display Edit Form
+// Edit Product Route - Display Edit Form with All Products
 router.get('/editProduct/:id', async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
+    const items = await Item.find();
     if (!item) {
       return res.status(404).send('Product not found');
     }
-    res.render('editProduct', { item });
+    res.render('editProduct', { item, items });
   } catch (err) {
     console.error('Error fetching product:', err);
     res.status(500).send('Internal Server Error');
@@ -85,6 +85,5 @@ router.post('/editProduct/:id', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-
 
 module.exports = router;

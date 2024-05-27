@@ -22,5 +22,15 @@
 
     <button type="submit">Update Product</button>
   </form>
+
+  <h2>All Products</h2>
+  <ul>
+    <% items.forEach(function(product) { %>
+      <li>
+        <strong><%= product.name %></strong> - <%= product.price %>
+        <a href="/editProduct/<%= product._id %>">Edit</a>
+      </li>
+    <% }); %>
+  </ul>
 </body>
 </html>
