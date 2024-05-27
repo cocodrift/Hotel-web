@@ -41,7 +41,7 @@ router.post('/addProducts', async (req, res) => {
   try {
     const newItem = new Item({
       name,
-      price,
+      priceKES,
       category,
       imageUrl
     });
