@@ -12,7 +12,7 @@ const itemSchema = new mongoose.Schema({
   currency: {
     type: String,
     required: true,
-    default: 'USD' // Default currency is USD
+    default: 'KES' // Default currency is KES
   },
   category: {
     type: String,
@@ -21,7 +21,9 @@ const itemSchema = new mongoose.Schema({
   imageUrl: {
     type: String,
     required: true
-  }
+  },
+  description: {
+    type: String }
 });
 
 const Item = mongoose.model('Item', itemSchema);
