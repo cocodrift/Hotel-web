@@ -9,7 +9,7 @@ body {
 
 img {
   border-radius: 10px;
-  max-width: 100%;  /* Ensure images are responsive */
+  max-width: 100%;
   height: auto;
 }
 
@@ -55,12 +55,16 @@ nav a {
   color: black;
   margin: 0 15px;
   position: relative;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 }
 
 nav a:hover {
-  text-decoration: wavy underline;
-  padding: 10px;
-  border-radius: 5px;
+  background-color: #f0f0f0;
+  color: #007bff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-decoration: none; /* Ensuring the text decoration is consistent */
 }
 
 /* Styles for the cart items */
@@ -137,6 +141,33 @@ nav a:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
+.modal-content {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.cart-list {
+  padding: 0;
+  list-style-type: none;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+}
+
+.cart-item:last-child {
+  border-bottom: none;
+}
+
+.total {
+  margin-top: 10px;
+  font-weight: bold;
+}
 
 .category-buttons {
   text-align: center;
@@ -159,7 +190,6 @@ nav a:hover {
   background-color: #45a049;
 }
 
-/* Styles for the item list and cards */
 #item-list {
   display: flex;
   flex-wrap: wrap;
@@ -175,7 +205,7 @@ nav a:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   width: 100%;
-  max-width: 250px; /* Ensure items don't stretch too much */
+  max-width: 250px;
   text-align: center;
   transition: transform 0.3s, box-shadow 0.3s;
 }
@@ -280,7 +310,6 @@ nav a:hover {
   background-color: #0056b3;
 }
 
-/* Contact form styles */
 .contact-form {
   background-color: #fff;
   padding: 20px;
@@ -396,7 +425,6 @@ footer {
   padding-top: 10px;
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
   .navbar {
     flex-direction: column;
