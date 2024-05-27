@@ -16,7 +16,7 @@ router.get('/canteen', async (req, res) => {
     const items = await Item.find();
     setTimeout (() =>{
       res.render('canteen', { items });
-    },10000);
+    },60000);
    
   } catch (err) {
     console.error('Error fetching items:', err);
