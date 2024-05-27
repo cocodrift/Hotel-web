@@ -12,7 +12,8 @@ const orderSchema = new mongoose.Schema({
         }
     ],
     totalPrice: { type: Number, required: true },
-    placedAt: { type: Date, default: Date.now }
+    placedAt: { type: Date, default: Date.now },
+    status: { type: String, default: 'active' }
 });
 
 const Order = mongoose.model('Order', orderSchema);

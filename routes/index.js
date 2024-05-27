@@ -97,10 +97,21 @@ router.post('/place-order', async (req, res) => {
 
 router.get('/orders', async (req, res) => {
   try {
-    const orders = await Order.find().sort({ placedAt: -1 }); // Sort orders by the date they were placed
+    const orders = await Order.find({ status: 'active' }).sort({ placedAt: -1 });
     res.render('orders', { orders });
   } catch (err) {
     console.error('Error fetching orders:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// Route to move an order to cleared status
+router.post('/orders/clear/:id', async (req, res) => {
+  try {
+    await Order.findByIdAndUpdate(req.params.id, { status: 'cleared' });
+    res.redirect('/orders');
+  } catch (err) {
+    console.error('Error updating order status:', err);
     res.status(500).send('Internal Server Error');
   }
 });

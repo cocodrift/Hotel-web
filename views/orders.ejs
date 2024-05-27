@@ -48,6 +48,9 @@
                             </li>
                         <% }); %>
                     </ul>
+                    <form action="/orders/clear/<%= order._id %>" method="POST">
+                        <button type="submit">Mark as Cleared</button>
+                    </form>
                 </li>
             <% }); %>
         </ul>
