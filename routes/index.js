@@ -84,6 +84,22 @@ router.post('/editProduct/:id', async (req, res) => {
   }
 });
 
+// Delete Product Route
+router.post('/deleteProduct/:id', async (req, res) => {
+  try {
+    const item = await Item.findByIdAndDelete(req.params.id);
+
+    if (!item) {
+      return res.status(404).send('Product not found');
+    }
+
+    res.redirect('/admin'); // Redirect to the admin page after deleting a product
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 // Route to display all products on the admin page
 router.get('/admin', async (req, res) => {
   try {
