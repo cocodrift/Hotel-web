@@ -45,18 +45,7 @@
             <button onclick="filterItems('desserts')">Desserts</button>
             <button onclick="filterItems('Fast foods')">Fast foods</button>
         </section>
-        <ul id="item-list">
-            <% items.forEach(item => { %>
-                <li class="item" data-category="<%= item.category %>">
-                    <img src="<%= item.imageUrl %>" alt="<%= item.name %> Image">
-                    <div>
-                        <h3><%= item.name %></h3>
-                        <p>$<%= item.price %></p>
-                        <button onclick="addToCart('<%= item._id %>', '<%= item.name %>', '<%= item.price %>')">Add to Cart</button>
-                    </div>
-                </li>
-            <% }); %>
-        </ul>
+        <ul id="item-list"></ul>
     </main>
 
     <!-- Cart Modal -->
@@ -75,14 +64,14 @@
             const items = document.querySelectorAll('.item');
             items.forEach(item => {
                 const categoryValue = item.getAttribute('data-category');
-                if (categoryValue === category || category === 'all') {
+                if (categoryValue === category) {
                     item.style.display = 'block';
                 } else {
                     item.style.display = 'none';
                 }
             });
         }
-    
+
         function addToCart(id, name, price) {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
             const existingItemIndex = cart.findIndex(item => item.id === id);
@@ -95,7 +84,7 @@
             updateCartCount();
             displayAddToCartMessage(name);
         }
-    
+
         function removeFromCart(id) {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
             const itemIndex = cart.findIndex(item => item.id === id);
@@ -106,7 +95,7 @@
                 updateCartCount();
             }
         }
-    
+
         function displayAddToCartMessage(itemName) {
             const message = document.createElement('div');
             message.classList.add('cart-message');
@@ -114,7 +103,7 @@
             document.body.appendChild(message);
             setTimeout(() => message.remove(), 2000);
         }
-    
+
         function placeOrder() {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
             fetch('/place-order', {
@@ -144,7 +133,7 @@
                 alert('Failed to place order. Please try again later.');
             });
         }
-    
+
         function loadCart() {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
             const cartList = document.getElementById('cart-list');
@@ -168,36 +157,35 @@
             totalElement.textContent = `Total: $${total.toFixed(2)}`;
             cartList.appendChild(totalElement);
         }
-    
+
         function updateCartCount() {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
             const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
             document.getElementById('cart-count').textContent = cartCount;
         }
-    
+
         // Modal logic
         const cartLink = document.getElementById('cart-link');
         const cartModal = document.getElementById('cart-modal');
         const closeCartModal = document.getElementById('close-cart-modal');
-    
+
         cartLink.onclick = function(event) {
             event.preventDefault();
             cartModal.style.display = 'block';
             loadCart();
         };
-    
+
         closeCartModal.onclick = function() {
             cartModal.style.display = 'none';
         };
-    
+
         window.onclick = function(event) {
             if (event.target === cartModal) {
                 cartModal.style.display = 'none';
             }
         };
-    
+
         document.addEventListener('DOMContentLoaded', () => {
-            loadCart();
             updateCartCount();
         });
     </script>
