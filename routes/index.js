@@ -77,7 +77,7 @@ router.post('/editProduct/:id', async (req, res) => {
       return res.status(404).send('Product not found');
     }
 
-    res.redirect('/canteen');
+    res.redirect('/admin');
   } catch (error) {
     console.error('Error updating product:', error);
     res.status(500).send('Internal Server Error');

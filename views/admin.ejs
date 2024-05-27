@@ -15,6 +15,7 @@
         <th>Price</th>
         <th>Category</th>
         <th>Image</th>
+        <th>Actions</th> <!-- New column for actions -->
       </tr>
     </thead>
     <tbody>
@@ -24,6 +25,9 @@
           <td><%= item.price %></td>
           <td><%= item.category %></td>
           <td><img src="<%= item.imageUrl %>" alt="<%= item.name %>"></td>
+          <td>
+            <a href="/editProduct/<%= item._id %>">Edit</a> <!-- Edit button -->
+          </td>
         </tr>
       <% }) %>
     </tbody>
