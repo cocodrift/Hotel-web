@@ -12,6 +12,15 @@ const orderSchema = new mongoose.Schema({
         }
     ],
     totalPrice: { type: Number, required: true },
+    tableNumber: {
+        type: String,
+        required: true,
+    },
+    paymentMethod: {
+        type: String,
+        required: true,
+        enum: ['mobile-money', 'cash'], // Ensure it's one of the specified values
+    },
     placedAt: { type: Date, default: Date.now },
     status: { type: String, default: 'active' }
 });

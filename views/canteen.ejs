@@ -65,7 +65,14 @@
             <span class="close" id="close-cart-modal">&times;</span>
             <h2>Your Cart</h2>
             <ul id="cart-list"></ul>
-            
+            <label for="table-number">Table Number:</label>
+            <input type="text" id="table-number" name="table-number" required>
+    
+            <label for="payment-method">Payment Method:</label>
+            <select id="payment-method" name="payment-method" required>
+                <option value="mobile-money">Mobile Money</option>
+                <option value="cash">Cash</option>
+            </select>
             <button onclick="placeOrder()">Place Order</button>
         </div>
     </div>
@@ -153,15 +160,28 @@
     }
     return totalPrice;
 }
-
 function placeOrder() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const tableNumber = document.getElementById('table-number').value;
+    const paymentMethod = document.getElementById('payment-method').value;
+
+    if (!tableNumber || !paymentMethod) {
+        alert('Please enter table number and select a payment method.');
+        return;
+    }
+
+    const orderData = {
+        cart,
+        tableNumber,
+        paymentMethod
+    };
+
     fetch('/place-order', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ cart }),
+        body: JSON.stringify(orderData),
     })
     .then(response => {
         if (response.ok) {
@@ -183,6 +203,7 @@ function placeOrder() {
         alert('Failed to place order. Please try again later.');
     });
 }
+
 
         function loadCart() {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];

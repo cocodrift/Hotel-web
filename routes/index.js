@@ -63,7 +63,8 @@ function calculateTotalPrice(cart) {
 }
 
 router.post('/place-order', async (req, res) => {
-  const { cart } = req.body;
+  const { cart, tableNumber, paymentMethod } = req.body;
+
   if (!cart || !Array.isArray(cart)) {
       return res.status(400).json({ error: 'Invalid cart data' });
   }
@@ -84,7 +85,9 @@ router.post('/place-order', async (req, res) => {
           orderNumber,
           items: cart,
           totalPrice,
-          placedAt: new Date()
+          placedAt: new Date(),
+          tableNumber,
+          paymentMethod,
       });
 
       const savedOrder = await order.save();
