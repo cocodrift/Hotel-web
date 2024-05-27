@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Item = require('../models/Item');
 const Order = require('../models/Order');
+const Counter = require('../models/Counter'); 
 
 
 router.get('/', async (req, res) => {
@@ -53,31 +54,47 @@ router.post('/addProducts', async (req, res) => {
   }
 });
 
-// POST route to handle placing orders
+function calculateTotalPrice(cart) {
+  let totalPrice = 0;
+  for (const item of cart) {
+      totalPrice += item.price * item.quantity;
+  }
+  return totalPrice;
+}
+
 router.post('/place-order', async (req, res) => {
-  const { cart, customer } = req.body;
+  const { cart } = req.body;
+  if (!cart || !Array.isArray(cart)) {
+      return res.status(400).json({ error: 'Invalid cart data' });
+  }
+
+  const totalPrice = calculateTotalPrice(cart);
 
   try {
-      // Create a new order instance
-      const newOrder = new Order({
-          items: cart.map(item => ({
-              productId: item.productId,
-              quantity: item.quantity
-          })),
-          totalPrice: calculateTotalPrice(cart), // Define your own function to calculate total price
-          customer,
-          status: 'pending' // You can set an initial status if needed
+      // Get the current order number
+      let counter = await Counter.findOneAndUpdate(
+          { name: 'orderNumber' },
+          { $inc: { value: 1 } },
+          { new: true, upsert: true }
+      );
+
+      const orderNumber = counter.value;
+
+      const order = new Order({
+          orderNumber,
+          items: cart,
+          totalPrice,
+          placedAt: new Date()
       });
 
-      // Save the order to the database
-      await newOrder.save();
-
-      res.status(200).json({ message: 'Order placed successfully!', order: newOrder });
-  } catch (error) {
-      console.error('Error placing order:', error);
+      const savedOrder = await order.save();
+      res.status(201).json({ message: 'Order placed successfully!', orderId: savedOrder._id, orderNumber });
+  } catch (err) {
+      console.error('Error placing order:', err);
       res.status(500).json({ error: 'Failed to place order. Please try again later.' });
   }
 });
+
 
 
 
