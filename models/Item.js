@@ -9,6 +9,11 @@ const itemSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  currency: {
+    type: String,
+    required: true,
+    default: 'USD' // Default currency is USD
+  },
   category: {
     type: String,
     required: true

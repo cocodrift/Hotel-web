@@ -51,7 +51,7 @@
                     <img src="<%= item.imageUrl %>" alt="<%= item.name %> Image">
                     <div>
                         <h3><%= item.name %></h3>
-                        <p>$<%= item.price %></p>
+                        <p>Price: <%= new Intl.NumberFormat('en-KES', { style: 'currency', currency: item.currency }).format(item.price) %></p>
                         <button onclick="addToCart('<%= item._id %>', '<%= item.name %>', '<%= item.price %>')">Add to Cart</button>
                     </div>
                 </li>

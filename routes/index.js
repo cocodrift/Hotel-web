@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Item = require('../models/Item');
+const convertCurrency = require('../utils/currencyConverter');
 
 router.get('/', async (req, res) => {
   try {
@@ -14,7 +15,15 @@ router.get('/', async (req, res) => {
 router.get('/canteen', async (req, res) => {
   try {
     const items = await Item.find();
-    res.render('canteen', { items });
+    const itemsWithPricesInKES = await Promise.all(items.map(async (item) => {
+      const convertedPrice = await convertToKES(item.price);
+      return {
+        ...item.toObject(),
+        price: convertedPrice,
+        currency: 'KES' // Update currency to KES
+      };
+    }));
+    res.render('canteen', { items: itemsWithPricesInKES });
   } catch (err) {
     console.error('Error fetching items:', err);
     res.status(500).send('Error fetching items');
@@ -30,12 +39,15 @@ router.get('/addProducts', (req, res) => {
 });
 
 router.post('/addProducts', async (req, res) => {
-  const { name, price, category, imageUrl } = req.body;
+  const { name, priceInKES, category, imageUrl, currency } = req.body;
 
   try {
+    const convertedPrice = await convertCurrency(priceInKES, 'KES', 'USD');
+
     const newItem = new Item({
       name,
-      price,
+      price: convertedPrice,
+      currency: 'USD',
       category,
       imageUrl
     });
@@ -47,6 +59,8 @@ router.post('/addProducts', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+
 
 router.get('/editProduct/:id', async (req, res) => {
   try {
