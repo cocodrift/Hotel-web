@@ -506,3 +506,24 @@ tr:nth-child(even) {
 img {
   max-width: 100px;
 }
+
+
+.order {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.order h3, .order h4, .order p {
+  margin: 0;
+}
+
+.order ul {
+  list-style: none;
+  padding: 0;
+}
+
+.order ul li {
+  margin-bottom: 5px;
+}

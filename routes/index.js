@@ -95,7 +95,15 @@ router.post('/place-order', async (req, res) => {
   }
 });
 
-
+router.get('/orders', async (req, res) => {
+  try {
+    const orders = await Order.find().sort({ placedAt: -1 }); // Sort orders by the date they were placed
+    res.render('orders', { orders });
+  } catch (err) {
+    console.error('Error fetching orders:', err);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 
 // GET route to render the editProduct form
