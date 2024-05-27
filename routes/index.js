@@ -48,8 +48,7 @@ router.post('/addProducts', async (req, res) => {
   }
 });
 
-// Edit Product Route - Display Edit Form with All Products
-router.get('/editProduct/', async (req, res) => {
+router.get('/editProduct/:id', async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
     const items = await Item.find();
@@ -63,7 +62,6 @@ router.get('/editProduct/', async (req, res) => {
   }
 });
 
-// Edit Product Route - Handle Form Submission
 router.post('/editProduct/:id', async (req, res) => {
   const { name, price, category, imageUrl } = req.body;
 
@@ -82,6 +80,17 @@ router.post('/editProduct/:id', async (req, res) => {
     res.redirect('/canteen');
   } catch (error) {
     console.error('Error updating product:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+// Route to display all products on the admin page
+router.get('/admin', async (req, res) => {
+  try {
+    const items = await Item.find();
+    res.render('admin', { items });
+  } catch (err) {
+    console.error('Error fetching items for admin page:', err);
     res.status(500).send('Internal Server Error');
   }
 });
