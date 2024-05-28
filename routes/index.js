@@ -1,41 +1,72 @@
 const express = require('express');
 const router = express.Router();
+const uuid = require('uuid');
 const Item = require('../models/Item');
 const Order = require('../models/Order');
 const Counter = require('../models/Counter');
 require('../config/passport-config');
-const passport = require('passport'); 
+const passport = require('passport');
 
-router.use(express.urlencoded({ extended: true }));
-router.use(passport.initialize()); 
+// Custom session middleware
+router.use((req, res, next) => {
+  if (!req.cookies.sessionId) {
+    const sessionId = uuid.v4();
+    res.cookie('sessionId', sessionId, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+  }
+  if (!req.session) {
+    req.session = {};
+  }
+  next();
+});
 
-router.get('/', async (req, res) => {
+// Initialize Passport middleware
+router.use(passport.initialize());
+router.use(passport.session());
+
+// Centralized error handler
+function errorHandler(err, req, res, next) {
+  console.error(err);
+  res.status(500).send('Internal Server Error');
+}
+
+// Helper function to check admin role
+function isAdmin(req, res, next) {
+  if (req.isAuthenticated() && req.user.role === 'admin') {
+    return next();
+  }
+  res.redirect('/login');
+}
+
+router.get('/', (req, res) => {
+  res.render('index');
+});
+
+router.post('/login', passport.authenticate('local', {
+  successRedirect: '/admin',
+  failureRedirect: '/login',
+  failureFlash: true
+}));
+
+router.get('/logout', (req, res) => {
+  req.session = null;
+  res.redirect('/');
+});
+
+router.get('/admin', isAdmin, async (req, res) => {
   try {
-    res.render('index');
+    const items = await Item.find();
+    res.render('admin', { items, user: req.user });
   } catch (err) {
-    console.error(err);
-    res.status(500).send('Internal Server Error');
+    next(err);
   }
 });
 
-// Login Page Route
-router.get('/login', (req, res) => {
-  res.render('login'); 
-});
-
-// Login Action Route
-router.post('/login', passport.authenticate('local', {
-  successRedirect: '/admin', 
-  failureRedirect: '/login'
-}));
-
-router.get('/canteen', async (req, res) => {
+router.get('/canteen', async (req, res, next) => {
   try {
     const items = await Item.find();
     res.render('canteen', { items });
   } catch (err) {
-    console.error('Error fetching items:', err);
-    res.status(500).send('Error fetching items');
+    next(err);
   }
 });
 
@@ -43,163 +74,99 @@ router.get('/contact', (req, res) => {
   res.render('contact');
 });
 
-router.get('/addProducts', (req, res) => {
+router.get('/addProducts', isAdmin, (req, res) => {
   res.render('addProducts');
 });
 
-router.post('/addProducts', async (req, res) => {
+router.post('/addProducts', isAdmin, async (req, res, next) => {
   const { name, category, imageUrl, priceInKES } = req.body;
-
   try {
-    const newItem = new Item({
-      name,
-      price: priceInKES,
-      currency: 'KES',
-      category,
-      imageUrl
-    });
-
+    const newItem = new Item({ name, price: priceInKES, currency: 'KES', category, imageUrl });
     await newItem.save();
-    res.redirect('/canteen'); 
+    res.redirect('/canteen');
   } catch (error) {
-    console.error('Error adding product:', error);
-    res.status(500).send('Internal Server Error');
+    next(error);
   }
 });
 
 function calculateTotalPrice(cart) {
-  let totalPrice = 0;
-  for (const item of cart) {
-      totalPrice += item.price * item.quantity;
-  }
-  return totalPrice;
+  return cart.reduce((total, item) => total + item.price * item.quantity, 0);
 }
 
-router.post('/place-order', async (req, res) => {
+router.post('/place-order', async (req, res, next) => {
   const { cart, tableNumber, paymentMethod } = req.body;
-
   if (!cart || !Array.isArray(cart)) {
-      return res.status(400).json({ error: 'Invalid cart data' });
+    return res.status(400).json({ error: 'Invalid cart data' });
   }
-
   const totalPrice = calculateTotalPrice(cart);
-
   try {
-      let counter = await Counter.findOneAndUpdate(
-          { name: 'orderNumber' },
-          { $inc: { value: 1 } },
-          { new: true, upsert: true }
-      );
-
-      const orderNumber = counter.value;
-
-      const order = new Order({
-          orderNumber,
-          items: cart,
-          totalPrice,
-          placedAt: new Date(),
-          tableNumber,
-          paymentMethod,
-      });
-
-      const savedOrder = await order.save();
-      res.status(201).json({ message: 'Order placed successfully!', orderId: savedOrder._id, orderNumber });
+    const counter = await Counter.findOneAndUpdate({ name: 'orderNumber' }, { $inc: { value: 1 } }, { new: true, upsert: true });
+    const orderNumber = counter.value;
+    const order = new Order({ orderNumber, items: cart, totalPrice, placedAt: new Date(), tableNumber, paymentMethod });
+    const savedOrder = await order.save();
+    res.status(201).json({ message: 'Order placed successfully!', orderId: savedOrder._id, orderNumber });
   } catch (err) {
-      console.error('Error placing order:', err);
-      res.status(500).json({ error: 'Failed to place order. Please try again later.' });
+    next(err);
   }
 });
 
-router.get('/orders', async (req, res) => {
+router.get('/orders', async (req, res, next) => {
   try {
     const orders = await Order.find({ status: 'active' }).sort({ placedAt: -1 });
     res.render('orders', { orders });
   } catch (err) {
-    console.error('Error fetching orders:', err);
-    res.status(500).send('Internal Server Error');
+    next(err);
   }
 });
 
-router.post('/orders/clear/:id', async (req, res) => {
+router.post('/orders/clear/:id', async (req, res, next) => {
   try {
     await Order.findByIdAndUpdate(req.params.id, { status: 'cleared' });
     res.redirect('/orders');
   } catch (err) {
-    console.error('Error updating order status:', err);
-    res.status(500).send('Internal Server Error');
+    next(err);
   }
 });
 
-router.get('/editProduct/:id', async (req, res) => {
+router.get('/editProduct/:id', isAdmin, async (req, res, next) => {
   try {
     const item = await Item.findById(req.params.id);
-    const items = await Item.find();
     if (!item) {
       return res.status(404).send('Product not found');
     }
-    res.render('editProduct', { item, items });
+    res.render('editProduct', { item });
   } catch (err) {
-    console.error('Error fetching product:', err);
-    res.status(500).send('Internal Server Error');
+    next(err);
   }
 });
 
-router.post('/editProduct/:id', async (req, res) => {
+router.post('/editProduct/:id', isAdmin, async (req, res, next) => {
   const { id } = req.params;
   const { name, price, category, imageUrl, description } = req.body;
-
   try {
-    const updatedProduct = await Item.findByIdAndUpdate(id, {
-      name,
-      price,
-      category,
-      imageUrl,
-      description
-    }, { new: true });
-
+    const updatedProduct = await Item.findByIdAndUpdate(id, { name, price, category, imageUrl, description }, { new: true });
     if (!updatedProduct) {
       return res.status(404).send('Product not found');
     }
-
     res.redirect('/admin');
   } catch (error) {
-    console.error('Error updating product:', error);
-    res.status(500).send('Internal Server Error');
+    next(error);
   }
 });
 
-router.post('/deleteProduct/:id', async (req, res) => {
+router.post('/deleteProduct/:id', isAdmin, async (req, res, next) => {
   try {
     const item = await Item.findByIdAndDelete(req.params.id);
-
     if (!item) {
       return res.status(404).send('Product not found');
     }
-
     res.redirect('/admin');
   } catch (error) {
-    console.error('Error deleting product:', error);
-    res.status(500).send('Internal Server Error');
+    next(error);
   }
 });
 
-router.get('/admin', async (req, res) => {
-  console.log('User:', req.user); // Check the user object
-  console.log('Authenticated:', req.isAuthenticated());
-  
-  if (req.user && req.user.role === 'admin') {
-    try {
-      const items = await Item.find();
-      res.render('admin', { items, user: req.user });
-    } catch (err) {
-      console.error('Error fetching items for admin page:', err);
-      res.status(500).send('Internal Server Error');
-    }
-  } else {
-    // User is not authenticated or does not have admin role
-    // Redirect or render unauthorized page
-    res.render('login');
-  }
-});
+// Use the error handler
+router.use(errorHandler);
 
 module.exports = router;
