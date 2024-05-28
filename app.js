@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const session = require('express-session');
+const MongoStore = require('connect-mongo'); // Correctly import connect-mongo
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -19,14 +20,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Set up session
-app.use(session({
-  secret: 'your_secret_key',
-  resave: false,
-  saveUninitialized: true,
-  store: new MongoStore({ mongooseConnection: mongoose.connection })
-}));
-
 // MongoDB connection
 mongoose.set('strictQuery', false); 
 const mongoURI = process.env.MONGO_URI;
@@ -42,11 +35,19 @@ mongoose.connect(mongoURI, {
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Error connecting to MongoDB:', err));
 
+// Set up session with connect-mongo
+app.use(session({
+  secret: 'your_secret_key',
+  resave: false,
+  saveUninitialized: true,
+  store: MongoStore.create({ mongoUrl: mongoURI }) // Correct way to use connect-mongo
+}));
+
 // Import routes
 const appRouter = require('./routes/index');
 const adminRouter = require('./routes/admin');
 app.use('/', appRouter);
-app.use('/admin', require('./middleware/isAuthenticated'),adminRouter);
+app.use('/admin', require('./middleware/isAuthenticated'), adminRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
