@@ -1,11 +1,15 @@
-// models/Counter.js
+// models/Order.js
 const mongoose = require('mongoose');
 
-const counterSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    value: { type: Number, default: 0 }
+const orderSchema = new mongoose.Schema({
+  orderNumber: { type: Number, required: true },
+  items: { type: Array, required: true },
+  totalPrice: { type: Number, required: true },
+  placedAt: { type: Date, default: Date.now },
+  tableNumber: { type: Number, required: true },
+  paymentMethod: { type: String, required: true }
 });
 
-const Counter = mongoose.model('Counter', counterSchema);
+const Order = mongoose.model('Order', orderSchema);
 
-module.exports = Counter;
+module.exports = Order;

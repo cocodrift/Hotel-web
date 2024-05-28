@@ -1,19 +1,31 @@
-<!-- login.ejs -->
+<!-- views/orderSummary.ejs -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Summary</title>
+  <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <h1>Login</h1>
-    <form action="/login" method="POST">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <button type="submit">Login</button>
-    </form>
+  <h1>Order Summary</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Total Orders</th>
+        <th>Total Revenue</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% summary.forEach(day => { %>
+        <tr>
+          <td><%= day._id %></td>
+          <td><%= day.totalOrders %></td>
+          <td><%= day.totalRevenue.toFixed(2) %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
 </body>
 </html>

@@ -70,11 +70,54 @@ router.post('/place-order', async (req, res, next) => {
   }
   const totalPrice = calculateTotalPrice(cart);
   try {
-    const counter = await Counter.findOneAndUpdate({ name: 'orderNumber' }, { $inc: { value: 1 } }, { new: true, upsert: true });
-    const orderNumber = counter.value;
+    const today = new Date().setHours(0, 0, 0, 0); // Get today's date at midnight
+    const counter = await Counter.findOne({ name: 'orderNumber' });
+    
+    if (!counter) {
+      // If no counter exists, create a new one
+      const newCounter = new Counter({ name: 'orderNumber', value: 1, lastUpdated: today });
+      await newCounter.save();
+      orderNumber = newCounter.value;
+    } else {
+      const lastUpdated = new Date(counter.lastUpdated).setHours(0, 0, 0, 0);
+      if (lastUpdated < today) {
+        // If the counter was last updated on a different day, reset it
+        counter.value = 1;
+        counter.lastUpdated = today;
+      } else {
+        // Otherwise, increment the counter
+        counter.value += 1;
+      }
+      await counter.save();
+      orderNumber = counter.value;
+    }
+
     const order = new Order({ orderNumber, items: cart, totalPrice, placedAt: new Date(), tableNumber, paymentMethod });
     const savedOrder = await order.save();
     res.status(201).json({ message: 'Order placed successfully!', orderId: savedOrder._id, orderNumber });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/order-summary', async (req, res, next) => {
+  try {
+    const summary = await Order.aggregate([
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: "%Y-%m-%d", date: "$placedAt" }
+          },
+          totalOrders: { $sum: 1 },
+          totalRevenue: { $sum: "$totalPrice" }
+        }
+      },
+      {
+        $sort: { _id: 1 }
+      }
+    ]);
+
+    res.render('login', { summary });
   } catch (err) {
     next(err);
   }
