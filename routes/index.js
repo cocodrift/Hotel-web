@@ -14,7 +14,7 @@ router.use(passport.initialize()); // Initialize Passport.js
 const sessionSecret = process.env.SESSION_SECRET || 'default_secret_key';
 
 // Set up session middleware
-app.use(session({
+router.use(session({
     secret: sessionSecret,
     resave: false,
     saveUninitialized: false
