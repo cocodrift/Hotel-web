@@ -213,14 +213,15 @@ router.post('/deleteProduct/:id', ensureAuthenticated, ensureAdmin, async (req, 
 });
 
 // Route to display all products on the admin page
-router.get('/admin',  async (req, res) => {
+router.get('/admin', ensureAuthenticated, ensureAdmin, async (req, res) => {
   try {
     const items = await Item.find();
-    res.render('admin', { items });
+    res.render('admin', { items, user: req.user }); // Pass the user object to the template
   } catch (err) {
     console.error('Error fetching items for admin page:', err);
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 module.exports = router;
