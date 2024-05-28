@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+const session = require('express-session');
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -17,6 +18,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Parse incoming request bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Set up session
+app.use(session({
+  secret: process.env.SECRET_KEY || 'your_secret_key',
+  resave: false,
+  saveUninitialized: true,
+}));
 
 // MongoDB connection
 mongoose.set('strictQuery', false); 
@@ -35,7 +43,15 @@ mongoose.connect(mongoURI, {
 
 // Import routes
 const appRouter = require('./routes/index');
+const adminRouter = require('./routes/admin');
 app.use('/', appRouter);
+app.use('/admin', adminRouter);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  res.status(err.status || 500);
+  res.render('error', { error: err });
+});
 
 // Start the server
 app.listen(port, () => {

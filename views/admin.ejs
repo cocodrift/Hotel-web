@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Welcome to MiniEats Ke, your home away from home. Experience luxury, comfort, and exquisite cuisine in the heart of Kenya.">
@@ -20,49 +20,54 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/styles.css">
-    <title>MiniEats Ke - Canteen</title>
+    <title>MiniEats Ke - Admin</title>
 </head>
 <body>
-
     <header>
-      <img src="/images/logo.png" alt="MiniEats Logo">
-      <h1>MiniEats</h1>
-      <nav>
-        <ul>
-          <li><a href="/admin/addProducts">Add</a></li>
-          <li><a href="/admin/orders">Orders</a></li>
-          <li><a href="/admin/order-summary">Today</a></li>
-        </ul>
-      </nav>
+        <img src="/images/logo.png" alt="MiniEats Logo">
+        <h1>MiniEats</h1>
+        <nav>
+            <ul>
+                <li><a href="/admin/addProducts">Add</a></li>
+                <li><a href="/admin/orders">Orders</a></li>
+                <li><a href="/admin/order-summary">Today</a></li>
+            </ul>
+        </nav>
     </header>
-  
-    <h1>Admin - Product List</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Price</th>
-          <th>Category</th>
-          <th>Image</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% items.forEach(item => { %>
-          <tr>
-            <td><%= item.name %></td>
-            <td><%= item.price %></td>
-            <td><%= item.category %></td>
-            <td><img src="<%= item.imageUrl %>" alt="<%= item.name %>"></td>
-            <td>
-              <a href="/admin/editProduct/<%= item._id %>">Edit</a>
-              <form action="/admin/deleteProduct/<%= item._id %>" method="POST" style="display:inline;">
-                <button type="submit">Delete</button>
-              </form>
-            </td>
-          </tr>
-        <% }) %>
-      </tbody>
-    </table>
+
+    <main>
+        <h1>Admin - Product List</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Category</th>
+                    <th>Image</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% items.forEach(item => { %>
+                    <tr>
+                        <td><%= item.name %></td>
+                        <td><%= item.price %></td>
+                        <td><%= item.category %></td>
+                        <td><img src="<%= item.imageUrl %>" alt="<%= item.name %> image"></td>
+                        <td>
+                            <a href="/admin/editProduct/<%= item._id %>">Edit</a>
+                            <form action="/admin/deleteProduct/<%= item._id %>" method="POST" style="display:inline;">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </main>
+
+    <footer>
+        <!-- Optional footer content -->
+    </footer>
 </body>
 </html>
