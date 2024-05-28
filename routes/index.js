@@ -2,8 +2,15 @@ const express = require('express');
 const router = express.Router();
 const Item = require('../models/Item');
 const Order = require('../models/Order');
-const Counter = require('../models/Counter'); 
+const Counter = require('../models/Counter');
+const User = require('../models/User');
+require('../config/passport-config')
+const passport = require('passport'); // Make sure Passport.js is configured and initialized
+const { ensureAuthenticated, ensureAdmin } = require('../middleware/auth');
 
+router.use(express.urlencoded({ extended: true }));
+router.use(passport.initialize());
+router.use(passport.session());
 
 router.get('/', async (req, res) => {
   try {
@@ -13,6 +20,19 @@ router.get('/', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+// Login Page Route
+router.get('/login', (req, res) => {
+    res.render('login'); // Renders the login form
+});
+
+// Login Action Route
+router.post('/login', passport.authenticate('local', {
+    successRedirect: '/admin', // Redirect to the home page on successful login
+    failureRedirect: '/login', // Redirect back to the login page on failure
+    failureFlash: true // Enable flash messages for displaying login errors
+}));
+
 
 router.get('/canteen', async (req, res) => {
   try {
@@ -98,7 +118,7 @@ router.post('/place-order', async (req, res) => {
   }
 });
 
-router.get('/orders', async (req, res) => {
+router.get('/orders',  ensureAuthenticated, ensureAdmin, async (req, res) => {
   try {
     const orders = await Order.find({ status: 'active' }).sort({ placedAt: -1 });
     res.render('orders', { orders });
@@ -109,7 +129,7 @@ router.get('/orders', async (req, res) => {
 });
 
 // Route to move an order to cleared status
-router.post('/orders/clear/:id', async (req, res) => {
+router.post('/orders/clear/:id',  ensureAuthenticated, ensureAdmin, async (req, res) => {
   try {
     await Order.findByIdAndUpdate(req.params.id, { status: 'cleared' });
     res.redirect('/orders');
@@ -121,7 +141,7 @@ router.post('/orders/clear/:id', async (req, res) => {
 
 
 // GET route to render the editProduct form
-router.get('/editProduct/:id', async (req, res) => {
+router.get('/editProduct/:id',  ensureAuthenticated, ensureAdmin, async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
     const items = await Item.find();
@@ -162,7 +182,7 @@ router.post('/editProduct/:id', async (req, res) => {
 });
 
 // Delete Product Route
-router.post('/deleteProduct/:id', async (req, res) => {
+router.post('/deleteProduct/:id', ensureAuthenticated, ensureAdmin, async (req, res) => {
   try {
     const item = await Item.findByIdAndDelete(req.params.id);
 
@@ -178,7 +198,7 @@ router.post('/deleteProduct/:id', async (req, res) => {
 });
 
 // Route to display all products on the admin page
-router.get('/admin', async (req, res) => {
+router.get('/admin',  ensureAuthenticated, ensureAdmin, async (req, res) => {
   try {
     const items = await Item.find();
     res.render('admin', { items });

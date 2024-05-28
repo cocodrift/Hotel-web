@@ -24,46 +24,50 @@
 </head>
 <body>
 
-  <header>
-    <img src="/images/logo.png" alt="MiniEats Logo">
-    <h1>MiniEats</h1>
-    <nav>
+  <% if (user && user.isAdmin) { %>
+    <header>
+      <img src="/images/logo.png" alt="MiniEats Logo">
+      <h1>MiniEats</h1>
+      <nav>
         <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/addProducts">Add</a></li>
-            <li><a href="/orders">Orders</a></li>
-            <li><a href="/Orders">Today</a></li>
+          <li><a href="/addProducts">Add</a></li>
+          <li><a href="/orders">Orders</a></li>
+          <li><a href="/Orders">Today</a></li>
         </ul>
-    </nav>
-</header>
-
-  <h1>Admin - Product List</h1>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Category</th>
-        <th>Image</th>
-        <th>Actions</th> <!-- New column for actions -->
-      </tr>
-    </thead>
-    <tbody>
-      <% items.forEach(item => { %>
+      </nav>
+    </header>
+  
+    <h1>Admin - Product List</h1>
+    <table>
+      <thead>
         <tr>
-          <td><%= item.name %></td>
-          <td><%= item.price %></td>
-          <td><%= item.category %></td>
-          <td><img src="<%= item.imageUrl %>" alt="<%= item.name %>"></td>
-          <td>
-            <a href="/editProduct/<%= item._id %>">Edit</a> <!-- Edit button -->
-            <form action="/deleteProduct/<%= item._id %>" method="POST" style="display:inline;">
-              <button type="submit">Delete</button> <!-- Delete button -->
-            </form>
-          </td>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Category</th>
+          <th>Image</th>
+          <th>Actions</th>
         </tr>
-      <% }) %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <% items.forEach(item => { %>
+          <tr>
+            <td><%= item.name %></td>
+            <td><%= item.price %></td>
+            <td><%= item.category %></td>
+            <td><img src="<%= item.imageUrl %>" alt="<%= item.name %>"></td>
+            <td>
+              <a href="/editProduct/<%= item._id %>">Edit</a>
+              <form action="/deleteProduct/<%= item._id %>" method="POST" style="display:inline;">
+                <button type="submit">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>You do not have permission to view this page.</p>
+  <% } %>
+  
 </body>
 </html>
