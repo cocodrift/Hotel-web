@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Item = require('../models/Item');
 const Order = require('../models/Order');
+const MongoStore = require('connect-mongo')(session);
 const Counter = require('../models/Counter');
 require('../config/passport-config')
 const session = require('express-session');
@@ -18,7 +19,8 @@ const sessionSecret = process.env.SESSION_SECRET || 'default_secret_key';
 router.use(session({
     secret: sessionSecret,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    store: new MongoStore({ mongooseConnection: mongoose.connection })
 }));
 
 const User = require('../models/User'); // Make sure to import the User model
