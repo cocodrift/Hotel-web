@@ -1,8 +1,17 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcryptjs');
+const session = require('express-session');
 const Item = require('../models/Item');
 const Order = require('../models/Order');
 const Counter = require('../models/Counter');
+const User = require('../models/User');
+
+router.use(session({
+  secret: 'your_secret_key',
+  resave: false,
+  saveUninitialized: true,
+}));
 
 // Centralized error handler
 function errorHandler(err, req, res, next) {
@@ -10,22 +19,69 @@ function errorHandler(err, req, res, next) {
   res.status(500).send('Internal Server Error');
 }
 
+// Middleware to check if user is authenticated
+function isAuthenticated(req, res, next) {
+  if (req.session.user) {
+    return next();
+  } else {
+    res.redirect('/login');
+  }
+}
 
 router.get('/', (req, res) => {
   res.render('index');
 });
 
+router.get('/register', (req, res) => {
+  res.render('register');
+});
 
+router.post('/register', async (req, res) => {
+  const { username, password } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const newUser = new User({ username, password: hashedPassword });
+
+  try {
+    await newUser.save();
+    res.redirect('/login');
+  } catch (err) {
+    console.error(err);
+    res.redirect('/register');
+  }
+});
+
+router.get('/login', (req, res) => {
+  res.render('login');
+});
+
+router.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const user = await User.findOne({ username });
+
+    if (user && await bcrypt.compare(password, user.password)) {
+      req.session.user = user;
+      res.redirect('/admin');
+    } else {
+      res.redirect('/login');
+    }
+  } catch (err) {
+    console.error(err);
+    res.redirect('/login');
+  }
+});
 
 router.get('/logout', (req, res) => {
-  req.session = null;
+  req.session.destroy();
   res.redirect('/');
 });
 
-router.get('/2024/admin',  async (req, res, next) => {
+router.get('/admin', isAuthenticated, async (req, res, next) => {
   try {
     const items = await Item.find();
-    res.render('admin', { items, user: req.user });
+    res.render('admin', { items, user: req.session.user });
   } catch (err) {
     next(err);
   }
@@ -44,11 +100,11 @@ router.get('/contact', (req, res) => {
   res.render('contact');
 });
 
-router.get('/addProducts',  (req, res) => {
+router.get('/addProducts', isAuthenticated, (req, res) => {
   res.render('addProducts');
 });
 
-router.post('/addProducts',  async (req, res, next) => {
+router.post('/addProducts', isAuthenticated, async (req, res, next) => {
   const { name, category, imageUrl, priceInKES } = req.body;
   try {
     const newItem = new Item({ name, price: priceInKES, currency: 'KES', category, imageUrl });
@@ -73,6 +129,7 @@ router.post('/place-order', async (req, res, next) => {
     const today = new Date().setHours(0, 0, 0, 0); // Get today's date at midnight
     const counter = await Counter.findOne({ name: 'orderNumber' });
     
+    let orderNumber;
     if (!counter) {
       // If no counter exists, create a new one
       const newCounter = new Counter({ name: 'orderNumber', value: 1, lastUpdated: today });
@@ -100,7 +157,7 @@ router.post('/place-order', async (req, res, next) => {
   }
 });
 
-router.get('/order-summary', async (req, res, next) => {
+router.get('/order-summary', isAuthenticated, async (req, res, next) => {
   try {
     const summary = await Order.aggregate([
       {
@@ -117,22 +174,22 @@ router.get('/order-summary', async (req, res, next) => {
       }
     ]);
 
-    res.render('login', { summary });
+    res.render('order-summary', { summary });
   } catch (err) {
     next(err);
   }
 });
 
-router.get('/orders', async (req, res, next) => {
+router.get('/orders', isAuthenticated, async (req, res, next) => {
   try {
     const orders = await Order.find({ status: 'active' }).sort({ placedAt: -1 });
-    res.render('orders', { orders });
+    res.render('orders', { user: req.session.user, orders });
   } catch (err) {
     next(err);
   }
 });
 
-router.post('/orders/clear/:id', async (req, res, next) => {
+router.post('/orders/clear/:id', isAuthenticated, async (req, res, next) => {
   try {
     await Order.findByIdAndUpdate(req.params.id, { status: 'cleared' });
     res.redirect('/orders');
@@ -141,19 +198,19 @@ router.post('/orders/clear/:id', async (req, res, next) => {
   }
 });
 
-router.get('/editProduct/:id',  async (req, res, next) => {
+router.get('/editProduct/:id', isAuthenticated, async (req, res, next) => {
   try {
     const item = await Item.findById(req.params.id);
     if (!item) {
       return res.status(404).send('Product not found');
     }
-    res.render('editProduct', { item });
+    res.render('editProduct', { user: req.session.user, item });
   } catch (err) {
     next(err);
   }
 });
 
-router.post('/editProduct/:id',  async (req, res, next) => {
+router.post('/editProduct/:id', isAuthenticated, async (req, res, next) => {
   const { id } = req.params;
   const { name, price, category, imageUrl, description } = req.body;
   try {
@@ -167,7 +224,7 @@ router.post('/editProduct/:id',  async (req, res, next) => {
   }
 });
 
-router.post('/deleteProduct/:id',  async (req, res, next) => {
+router.post('/deleteProduct/:id', isAuthenticated, async (req, res, next) => {
   try {
     const item = await Item.findByIdAndDelete(req.params.id);
     if (!item) {
