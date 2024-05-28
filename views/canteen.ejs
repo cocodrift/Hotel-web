@@ -46,7 +46,11 @@
             <button onclick="filterItems('fast foods')">Fast foods</button>
         </section>
         <ul id="item-list">
-            <% items.forEach(item => { %>
+            <script>
+                const categoryOrder = ['breakfast', 'lunch', 'dinner', 'beverages', 'desserts', 'fast foods'];
+                const sortedItems = items.sort((a, b) => categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category));
+            </script>
+            <% sortedItems.forEach(item => { %>
                 <li class="item" data-category="<%= item.category %>">
                     <img src="<%= item.imageUrl %>" alt="<%= item.name %> Image">
                     <div>
@@ -77,34 +81,32 @@
         </div>
     </div>
      
-     
     <footer class="footer">
         <div class="footer-content">
-          
-          <div class="footer-section links">
-            <h3>Quick Links</h3>
-            <ul>
-              <li><a href="/">Home</a></li>
-              <li><a href="/about">About</a></li>
-            </ul>
-          </div>
-          <div class="footer-section contact">
-            <h3>Contact Us</h3>
-            <p>Email: minieatske@gmail.com</p>
-            <p>Phone: +254797054212</p>
-          </div>
-          <div class="footer-section social">
-            <h3>Follow Us</h3>
-            <div class="social-icons">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"><FaFacebook /></a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"><FaTwitter /></a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"><FaInstagram /></a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"><FaLinkedin /></a>
+            <div class="footer-section links">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                </ul>
             </div>
-          </div>
+            <div class="footer-section contact">
+                <h3>Contact Us</h3>
+                <p>Email: minieatske@gmail.com</p>
+                <p>Phone: +254797054212</p>
+            </div>
+            <div class="footer-section social">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"><FaFacebook /></a>
+                    <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"><FaTwitter /></a>
+                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"><FaInstagram /></a>
+                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"><FaLinkedin /></a>
+                </div>
+            </div>
         </div>
         <div class="footer-bottom">
-          <p>&copy; 2024 minieatske. All rights reserved.</p>
+            <p>&copy; 2024 minieatske. All rights reserved.</p>
         </div>
     </footer>
     
@@ -154,57 +156,57 @@
         }
     
         function calculateTotalPrice(cart) {
-    let totalPrice = 0;
-    for (const item of cart) {
-        totalPrice += item.price * item.quantity;
-    }
-    return totalPrice;
-}
-function placeOrder() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const tableNumber = document.getElementById('table-number').value;
-    const paymentMethod = document.getElementById('payment-method').value;
-
-    if (!tableNumber || !paymentMethod) {
-        alert('Please enter table number and select a payment method.');
-        return;
-    }
-
-    const orderData = {
-        cart,
-        tableNumber,
-        paymentMethod
-    };
-
-    fetch('/place-order', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(orderData),
-    })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
+            let totalPrice = 0;
+            for (const item of cart) {
+                totalPrice += item.price * item.quantity;
+            }
+            return totalPrice;
         }
-        throw new Error('Failed to place order');
-    })
-    .then(data => {
-        // Handle successful order placement
-        console.log('Order placed successfully:', data);
-        localStorage.removeItem('cart');
-        loadCart(); // Update the cart display
-        updateCartCount(); // Update the cart count display
-        alert('Your order has been placed successfully!');
-    })
-    .catch(error => {
-        // Handle error
-        console.error('Error placing order:', error.message);
-        alert('Failed to place order. Please try again later.');
-    });
-}
-
-
+    
+        function placeOrder() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const tableNumber = document.getElementById('table-number').value;
+            const paymentMethod = document.getElementById('payment-method').value;
+    
+            if (!tableNumber || !paymentMethod) {
+                alert('Please enter table number and select a payment method.');
+                return;
+            }
+    
+            const orderData = {
+                cart,
+                tableNumber,
+                paymentMethod
+            };
+    
+            fetch('/place-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(orderData),
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Failed to place order');
+            })
+            .then(data => {
+                // Handle successful order placement
+                console.log('Order placed successfully:', data);
+                localStorage.removeItem('cart');
+                loadCart(); // Update the cart display
+                updateCartCount(); // Update the cart count display
+                alert('Your order has been placed successfully!');
+            })
+            .catch(error => {
+                // Handle error
+                console.error('Error placing order:', error.message);
+                alert('Failed to place order. Please try again later.');
+            });
+        }
+    
         function loadCart() {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
             const cartList = document.getElementById('cart-list');
