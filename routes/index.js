@@ -21,6 +21,37 @@ router.use(session({
     saveUninitialized: false
 }));
 
+router.get('/register', (req, res) => {
+  res.render('adminr');
+});
+
+
+router.post('/register', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+      // Check if the username already exists
+      const existingUser = await User.findOne({ username });
+      if (existingUser) {
+          return res.status(400).send('Username already exists');
+      }
+
+      // Create a new admin user
+      const admin = new User({
+          username,
+          password,
+          role: 'admin' // Set the role to admin
+      });
+
+      // Save the new user to the database
+      await admin.save();
+
+      res.status(201).send('Admin user created successfully');
+  } catch (error) {
+      console.error('Error creating admin user:', error);
+      res.status(500).send('Internal Server Error');
+  }
+});
 
 // Initialize flash middleware
 router.use(flash());
