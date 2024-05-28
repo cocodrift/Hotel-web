@@ -349,7 +349,7 @@ nav a:hover {
   background-color: #555;
 }
 
-.contact-form input:focus,
+contact-form input:focus,
 .contact-form textarea:focus {
   border-color: #555;
 }
@@ -482,48 +482,74 @@ footer {
   }
 }
 
+/* General table styling */
 table {
-  width: 80%;
-  margin: 0 auto;
+  width: 100%;
   border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 1.2em;
+  font-family: 'Merienda', cursive;
 }
 
-th, td {
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: center;
+/* Table header styling */
+table thead tr {
+  background-color: #009879;
+  color: #ffffff;
+  text-align: left;
+  font-weight: bold;
 }
 
-th {
-  background-color: #333;
-  color: #fff;
+/* Table body styling */
+table tbody tr {
+  border-bottom: 1px solid #dddddd;
 }
 
-tr:nth-child(even) {
-  background-color: #f2f2f2;
+table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
 }
 
-img {
-  max-width: 100px;
+table tbody tr:nth-of-type(odd) {
+  background-color: #ffffff;
 }
 
+table tbody tr:hover {
+  background-color: #f1f1f1;
+}
 
-.order {
-  border: 1px solid #ddd;
-  padding: 10px;
-  margin-bottom: 10px;
+/* Table cell padding */
+table td, table th {
+  padding: 12px 15px;
+}
+
+/* Image styling */
+table td img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
   border-radius: 5px;
 }
 
-.order h3, .order h4, .order p {
-  margin: 0;
+/* Actions column styling */
+table td a {
+  text-decoration: none;
+  color: #009879;
+  font-weight: bold;
+  margin-right: 10px;
 }
 
-.order ul {
-  list-style: none;
-  padding: 0;
+table td form {
+  display: inline;
 }
 
-.order ul li {
-  margin-bottom: 5px;
+table td button {
+  background-color: #ff4c4c;
+  color: #ffffff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+table td button:hover {
+  background-color: #ff0000;
 }
