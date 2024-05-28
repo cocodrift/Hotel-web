@@ -1,15 +1,14 @@
-// models/Order.js
+// models/Counter.js
 const mongoose = require('mongoose');
 
-const orderSchema = new mongoose.Schema({
-  orderNumber: { type: Number, required: true },
-  items: { type: Array, required: true },
-  totalPrice: { type: Number, required: true },
-  placedAt: { type: Date, default: Date.now },
-  tableNumber: { type: Number, required: true },
-  paymentMethod: { type: String, required: true }
-});
+if (!mongoose.modelNames().includes('Counter')) {
+  const counterSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    value: { type: Number, default: 0 },
+    lastUpdated: { type: Date, default: Date.now }
+  });
 
-const Order = mongoose.model('Order', orderSchema);
+  mongoose.model('Counter', counterSchema);
+}
 
-module.exports = Order;
+module.exports = mongoose.model('Counter');
