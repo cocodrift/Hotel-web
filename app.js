@@ -52,8 +52,9 @@ app.use('/admin', require('./middleware/isAuthenticated'), adminRouter);
 // Error handling middleware
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
-  res.render('error', { error: err });
+  res.render('error', { message: err.message });
 });
+
 
 // Start the server
 app.listen(port, () => {
