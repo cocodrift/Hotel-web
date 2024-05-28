@@ -7,6 +7,7 @@ const Counter = require('../models/Counter');
 const passport = require('passport');
 const cookieParser = require('cookie-parser'); // Import cookie-parser
 
+require('dotenv').config(); // Load environment variables from .env file
 require('../config/passport-config');
 
 // Use cookie-parser middleware
