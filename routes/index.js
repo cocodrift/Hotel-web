@@ -182,14 +182,30 @@ router.post('/deleteProduct/:id', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-
+router.get('/admin', (req, res) => {
+  if (req.user && req.user.role === 'admin') {
+    // User is authenticated and has admin role
+    // Render admin page
+    res.render('admin', { user: req.user });
+  } else {
+    // User is not authenticated or does not have admin role
+    // Redirect or render unauthorized page
+    res.render('unauthorized');
+  }
+});
 router.get('/admin', async (req, res) => {
-  try {
-    const items = await Item.find();
-    res.render('admin', { items, user: req.user });
-  } catch (err) {
-    console.error('Error fetching items for admin page:', err);
-    res.status(500).send('Internal Server Error');
+  if (req.user && req.user.role === 'admin') {
+    try {
+      const items = await Item.find();
+      res.render('admin', { items, user: req.user });
+    } catch (err) {
+      console.error('Error fetching items for admin page:', err);
+      res.status(500).send('Internal Server Error');
+    }
+  } else {
+    // User is not authenticated or does not have admin role
+    // Redirect or render unauthorized page
+    res.render('unauthorized');
   }
 });
 
