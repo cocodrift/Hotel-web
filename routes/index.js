@@ -205,7 +205,7 @@ router.get('/admin', async (req, res) => {
   } else {
     // User is not authenticated or does not have admin role
     // Redirect or render unauthorized page
-    res.render('unauthorized');
+    res.render('login');
   }
 });
 
