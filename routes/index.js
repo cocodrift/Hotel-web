@@ -3,16 +3,11 @@ const router = express.Router();
 const Item = require('../models/Item');
 const Order = require('../models/Order');
 const Counter = require('../models/Counter');
-require('../config/passport-config')
-const flash = require('connect-flash');
+require('../config/passport-config');
 const passport = require('passport'); 
 
 router.use(express.urlencoded({ extended: true }));
 router.use(passport.initialize()); 
-
-
-// Initialize flash middleware
-router.use(flash());
 
 router.get('/', async (req, res) => {
   try {
@@ -25,14 +20,13 @@ router.get('/', async (req, res) => {
 
 // Login Page Route
 router.get('/login', (req, res) => {
-  res.render('login', { message: req.flash('error') }); 
+  res.render('login'); 
 });
 
 // Login Action Route
 router.post('/login', passport.authenticate('local', {
   successRedirect: '/admin', 
-  failureRedirect: '/login', 
-  failureFlash: true 
+  failureRedirect: '/login'
 }));
 
 router.get('/canteen', async (req, res) => {
