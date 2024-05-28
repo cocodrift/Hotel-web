@@ -3,14 +3,12 @@ const router = express.Router();
 const Item = require('../models/Item');
 const Order = require('../models/Order');
 const Counter = require('../models/Counter');
-const User = require('../models/User');
 require('../config/passport-config')
 const passport = require('passport'); // Make sure Passport.js is configured and initialized
 const { ensureAuthenticated, ensureAdmin } = require('../middleware/auth');
 
 router.use(express.urlencoded({ extended: true }));
-router.use(passport.initialize());
-router.use(passport.session());
+router.use(passport.initialize()); // Initialize Passport.js
 
 router.get('/', async (req, res) => {
   try {
@@ -27,11 +25,22 @@ router.get('/login', (req, res) => {
 });
 
 // Login Action Route
-router.post('/login', passport.authenticate('local', {
-    successRedirect: '/admin', // Redirect to the home page on successful login
-    failureRedirect: '/login', // Redirect back to the login page on failure
-    failureFlash: true // Enable flash messages for displaying login errors
-}));
+router.post('/login', (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            return res.redirect('/login'); // Redirect to login page on authentication failure
+        }
+        req.logIn(user, (err) => {
+            if (err) {
+                return next(err);
+            }
+            return res.redirect('/admin'); // Redirect to admin page on successful login
+        });
+    })(req, res, next);
+});
 
 
 router.get('/canteen', async (req, res) => {
