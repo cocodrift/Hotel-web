@@ -13,6 +13,17 @@ const { ensureAuthenticated, ensureAdmin } = require('../middleware/auth');
 router.use(express.urlencoded({ extended: true }));
 router.use(passport.initialize()); // Initialize Passport.js
 
+const crypto = require('crypto');
+
+// Function to generate a random session secret
+const generateSessionSecret = () => {
+  return crypto.randomBytes(64).toString('hex');
+};
+
+// Generate session secret
+const sessionSecret = generateSessionSecret();
+
+
 const sessionSecret = process.env.SESSION_SECRET || 'default_secret_key';
 
 // Set up session middleware
