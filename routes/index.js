@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Item = require('../models/Item');
 const Order = require('../models/Order');
-const session = require('express-session'); 
-const MongoStore = require('connect-mongo')(session); 
 const Counter = require('../models/Counter');
 require('../config/passport-config')
 const flash = require('connect-flash');
@@ -12,25 +10,6 @@ const passport = require('passport');
 router.use(express.urlencoded({ extended: true }));
 router.use(passport.initialize()); 
 
-const crypto = require('crypto');
-
-// Function to generate a random session secret
-const generateSessionSecret = () => {
-  return crypto.randomBytes(64).toString('hex');
-};
-
-// Generate session secret
-const sessionSecret = generateSessionSecret();
-
-// Set up session middleware
-router.use(session({
-    secret: sessionSecret,
-    resave: false,
-    saveUninitialized: false,
-    store: new MongoStore({ mongooseConnection: mongoose.connection })
-}));
-
-const User = require('../models/User'); 
 
 // Initialize flash middleware
 router.use(flash());
