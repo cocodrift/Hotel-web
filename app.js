@@ -3,7 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const session = require('express-session');
-const MongoStore = require('connect-mongo'); // Correctly import connect-mongo
+const MongoStore = require('connect-mongo');
+const passport = require('./middleware/passportConfig'); // Import the passport configuration
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -21,7 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // MongoDB connection
-mongoose.set('strictQuery', false); 
+mongoose.set('strictQuery', false);
 const mongoURI = process.env.MONGO_URI;
 if (!mongoURI) {
     console.error('MONGO_URI is not defined');
@@ -40,8 +41,12 @@ app.use(session({
   secret: 'your_secret_key',
   resave: false,
   saveUninitialized: true,
-  store: MongoStore.create({ mongoUrl: mongoURI }) // Correct way to use connect-mongo
+  store: MongoStore.create({ mongoUrl: mongoURI })
 }));
+
+// Initialize Passport and restore authentication state, if any, from the session
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Import routes
 const appRouter = require('./routes/index');
@@ -54,7 +59,6 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.render('error', { message: err.message });
 });
-
 
 // Start the server
 app.listen(port, () => {
