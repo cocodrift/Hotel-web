@@ -4,6 +4,7 @@ const Item = require('../models/Item');
 const Order = require('../models/Order');
 const Counter = require('../models/Counter');
 require('../config/passport-config')
+const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport'); // Make sure Passport.js is configured and initialized
 const { ensureAuthenticated, ensureAdmin } = require('../middleware/auth');
