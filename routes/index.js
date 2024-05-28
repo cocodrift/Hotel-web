@@ -4,11 +4,25 @@ const Item = require('../models/Item');
 const Order = require('../models/Order');
 const Counter = require('../models/Counter');
 require('../config/passport-config')
+const flash = require('connect-flash');
 const passport = require('passport'); // Make sure Passport.js is configured and initialized
 const { ensureAuthenticated, ensureAdmin } = require('../middleware/auth');
 
 router.use(express.urlencoded({ extended: true }));
 router.use(passport.initialize()); // Initialize Passport.js
+
+const sessionSecret = process.env.SESSION_SECRET || 'default_secret_key';
+
+// Set up session middleware
+app.use(session({
+    secret: sessionSecret,
+    resave: false,
+    saveUninitialized: false
+}));
+
+
+// Initialize flash middleware
+router.use(flash());
 
 router.get('/', async (req, res) => {
   try {
