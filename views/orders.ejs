@@ -61,7 +61,7 @@
                     <form action="/orders/clear/<%= order._id %>" method="POST" class="no-print">
                         <button type="submit">Mark as Cleared</button>
                     </form>
-                    <button type="button" onclick="printOrder(<%= order.orderNumber %>)">Print Order</button>
+                    <button type="button" onclick="printOrder()">Print Order</button>
                 </li>
             <% }); %>
         </ul>
