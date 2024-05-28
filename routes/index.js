@@ -107,7 +107,7 @@ router.get('/addProducts', isAuthenticated, (req, res) => {
 router.post('/addProducts', isAuthenticated, async (req, res, next) => {
   const { name, category, imageUrl, priceInKES } = req.body;
   try {
-    const newItem = new Item({ name, price: priceInKES, currency: 'KES', category, imageUrl });
+    const newItem = new Item({ name, price: priceInKES, currency: 'KES', category, imageUrl, user: req.session.user });
     await newItem.save();
     res.redirect('/canteen');
   } catch (error) {
@@ -174,7 +174,7 @@ router.get('/order-summary', isAuthenticated, async (req, res, next) => {
       }
     ]);
 
-    res.render('order-summary', { summary });
+    res.render('order-summary', { summary ,  user: req.session.user });
   } catch (err) {
     next(err);
   }
