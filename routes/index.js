@@ -1,29 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const uuid = require('uuid');
 const Item = require('../models/Item');
 const Order = require('../models/Order');
 const Counter = require('../models/Counter');
-const passport = require('passport');
-const cookieParser = require('cookie-parser'); // Import cookie-parser
-
-require('dotenv').config(); // Load environment variables from .env file
-require('../config/passport-config');
-
-// Use cookie-parser middleware
-router.use(cookieParser());
-
-// Custom session middleware
-router.use((req, res, next) => {
-  if (!req.cookies.sessionId) {
-    const sessionId = uuid.v4();
-    res.cookie('sessionId', sessionId, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
-  }
-  if (!req.session) {
-    req.session = {};
-  }
-  next();
-});
 
 // Initialize Passport middleware
 router.use(passport.initialize());
@@ -35,34 +14,19 @@ function errorHandler(err, req, res, next) {
   res.status(500).send('Internal Server Error');
 }
 
-// Helper function to check admin role
-function isAdmin(req, res, next) {
-  if (req.isAuthenticated() && req.user.role === 'admin') {
-    return next();
-  }
-  res.redirect('/login');
-}
 
 router.get('/', (req, res) => {
   res.render('index');
 });
 
-router.get('/login', (req, res) => {
-  res.render('login');
-});
 
-router.post('/login', passport.authenticate('local', {
-  successRedirect: '/admin',
-  failureRedirect: '/login',
-  failureFlash: true
-}));
 
 router.get('/logout', (req, res) => {
   req.session = null;
   res.redirect('/');
 });
 
-router.get('/admin', isAdmin, async (req, res, next) => {
+router.get('/admin',  async (req, res, next) => {
   try {
     const items = await Item.find();
     res.render('admin', { items, user: req.user });
@@ -84,11 +48,11 @@ router.get('/contact', (req, res) => {
   res.render('contact');
 });
 
-router.get('/addProducts', isAdmin, (req, res) => {
+router.get('/addProducts',  (req, res) => {
   res.render('addProducts');
 });
 
-router.post('/addProducts', isAdmin, async (req, res, next) => {
+router.post('/addProducts',  async (req, res, next) => {
   const { name, category, imageUrl, priceInKES } = req.body;
   try {
     const newItem = new Item({ name, price: priceInKES, currency: 'KES', category, imageUrl });
@@ -138,7 +102,7 @@ router.post('/orders/clear/:id', async (req, res, next) => {
   }
 });
 
-router.get('/editProduct/:id', isAdmin, async (req, res, next) => {
+router.get('/editProduct/:id',  async (req, res, next) => {
   try {
     const item = await Item.findById(req.params.id);
     if (!item) {
@@ -150,7 +114,7 @@ router.get('/editProduct/:id', isAdmin, async (req, res, next) => {
   }
 });
 
-router.post('/editProduct/:id', isAdmin, async (req, res, next) => {
+router.post('/editProduct/:id',  async (req, res, next) => {
   const { id } = req.params;
   const { name, price, category, imageUrl, description } = req.body;
   try {
@@ -164,7 +128,7 @@ router.post('/editProduct/:id', isAdmin, async (req, res, next) => {
   }
 });
 
-router.post('/deleteProduct/:id', isAdmin, async (req, res, next) => {
+router.post('/deleteProduct/:id',  async (req, res, next) => {
   try {
     const item = await Item.findByIdAndDelete(req.params.id);
     if (!item) {
