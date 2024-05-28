@@ -157,7 +157,7 @@ router.post('/place-order', async (req, res, next) => {
   }
 });
 
-router.get('/order-summary', isAuthenticated, async (req, res, next) => {
+router.get('admin/order-summary', isAuthenticated, async (req, res, next) => {
   try {
     const summary = await Order.aggregate([
       {
@@ -180,7 +180,7 @@ router.get('/order-summary', isAuthenticated, async (req, res, next) => {
   }
 });
 
-router.get('/orders', isAuthenticated, async (req, res, next) => {
+router.get('admin/orders', isAuthenticated, async (req, res, next) => {
   try {
     const orders = await Order.find({ status: 'active' }).sort({ placedAt: -1 });
     res.render('orders', { user: req.session.user, orders });
@@ -189,7 +189,7 @@ router.get('/orders', isAuthenticated, async (req, res, next) => {
   }
 });
 
-router.post('/orders/clear/:id', isAuthenticated, async (req, res, next) => {
+router.post('admin/orders/clear/:id', isAuthenticated, async (req, res, next) => {
   try {
     await Order.findByIdAndUpdate(req.params.id, { status: 'cleared' });
     res.redirect('/orders');
@@ -198,7 +198,7 @@ router.post('/orders/clear/:id', isAuthenticated, async (req, res, next) => {
   }
 });
 
-router.get('/editProduct/:id', isAuthenticated, async (req, res, next) => {
+router.get('admin/editProduct/:id', isAuthenticated, async (req, res, next) => {
   try {
     const item = await Item.findById(req.params.id);
     if (!item) {
@@ -210,7 +210,7 @@ router.get('/editProduct/:id', isAuthenticated, async (req, res, next) => {
   }
 });
 
-router.post('/editProduct/:id', isAuthenticated, async (req, res, next) => {
+router.post('admin/editProduct/:id', isAuthenticated, async (req, res, next) => {
   const { id } = req.params;
   const { name, price, category, imageUrl, description } = req.body;
   try {
@@ -224,7 +224,7 @@ router.post('/editProduct/:id', isAuthenticated, async (req, res, next) => {
   }
 });
 
-router.post('/deleteProduct/:id', isAuthenticated, async (req, res, next) => {
+router.post('admin/deleteProduct/:id', isAuthenticated, async (req, res, next) => {
   try {
     const item = await Item.findByIdAndDelete(req.params.id);
     if (!item) {

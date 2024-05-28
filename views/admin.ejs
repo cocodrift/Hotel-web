@@ -29,9 +29,9 @@
       <h1>MiniEats</h1>
       <nav>
         <ul>
-          <li><a href="/addProducts">Add</a></li>
-          <li><a href="/orders">Orders</a></li>
-          <li><a href="/order-summary">Today</a></li>
+          <li><a href="/admin/addProducts">Add</a></li>
+          <li><a href="/admin/orders">Orders</a></li>
+          <li><a href="/admin/order-summary">Today</a></li>
         </ul>
       </nav>
     </header>
@@ -55,8 +55,8 @@
             <td><%= item.category %></td>
             <td><img src="<%= item.imageUrl %>" alt="<%= item.name %>"></td>
             <td>
-              <a href="/editProduct/<%= item._id %>">Edit</a>
-              <form action="/deleteProduct/<%= item._id %>" method="POST" style="display:inline;">
+              <a href="/admin/editProduct/<%= item._id %>">Edit</a>
+              <form action="/admin/deleteProduct/<%= item._id %>" method="POST" style="display:inline;">
                 <button type="submit">Delete</button>
               </form>
             </td>
