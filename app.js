@@ -21,9 +21,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // Set up session
 app.use(session({
-  secret: process.env.SECRET_KEY || 'your_secret_key',
+  secret: 'your_secret_key',
   resave: false,
   saveUninitialized: true,
+  store: new MongoStore({ mongooseConnection: mongoose.connection })
 }));
 
 // MongoDB connection
@@ -45,7 +46,7 @@ mongoose.connect(mongoURI, {
 const appRouter = require('./routes/index');
 const adminRouter = require('./routes/admin');
 app.use('/', appRouter);
-app.use('/admin', adminRouter);
+app.use('/admin', require('./middleware/isAuthenticated'),adminRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
