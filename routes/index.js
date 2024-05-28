@@ -23,8 +23,6 @@ router.use(session({
 
 const User = require('../models/User'); // Make sure to import the User model
 
-
-
 // Initialize flash middleware
 router.use(flash());
 
@@ -39,29 +37,15 @@ router.get('/', async (req, res) => {
 
 // Login Page Route
 router.get('/login', (req, res) => {
-    res.render('login'); // Renders the login form
+  res.render('login', { message: req.flash('error') }); // Render login form with flash message
 });
 
 // Login Action Route
-router.post('/login', (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
-      if (err) {
-          return next(err); // Pass the error to the error handler
-      }
-      if (!user) {
-          // Authentication failed, redirect to login page with flash message
-          req.flash('error', 'Invalid username or password');
-          return res.redirect('/login');
-      }
-      req.logIn(user, (err) => {
-          if (err) {
-              return next(err); // Pass the error to the error handler
-          }
-          // Authentication succeeded, redirect to admin page
-          return res.redirect('/admin');
-      });
-  })(req, res, next);
-});
+router.post('/login', passport.authenticate('local', {
+  successRedirect: '/admin', // Redirect to the admin page on successful login
+  failureRedirect: '/login', // Redirect back to the login page on failure
+  failureFlash: true // Enable flash messages for displaying login errors
+}));
 
 
 
