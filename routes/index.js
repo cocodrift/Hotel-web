@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Item = require('../models/Item');
 const Order = require('../models/Order');
+const session = require('express-session'); // Move express-session import here
 const MongoStore = require('connect-mongo')(session);
 const Counter = require('../models/Counter');
 require('../config/passport-config')
-const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport'); // Make sure Passport.js is configured and initialized
 const { ensureAuthenticated, ensureAdmin } = require('../middleware/auth');
