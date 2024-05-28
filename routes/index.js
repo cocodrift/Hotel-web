@@ -3,7 +3,7 @@ const router = express.Router();
 const Item = require('../models/Item');
 const Order = require('../models/Order');
 const session = require('express-session'); // Move express-session import here
-const MongoStore = require('connect-mongo')(session);
+const MongoStore = require('connect-mongo')(session); // Use session here
 const Counter = require('../models/Counter');
 require('../config/passport-config')
 const flash = require('connect-flash');
