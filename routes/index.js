@@ -22,7 +22,7 @@ router.get('/logout', (req, res) => {
   res.redirect('/');
 });
 
-router.get('/admin',  async (req, res, next) => {
+router.get('/2024/admin',  async (req, res, next) => {
   try {
     const items = await Item.find();
     res.render('admin', { items, user: req.user });
