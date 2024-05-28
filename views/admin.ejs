@@ -24,7 +24,6 @@
 </head>
 <body>
 
-  <% if (user && user.isAdmin) { %>
     <header>
       <img src="/images/logo.png" alt="MiniEats Logo">
       <h1>MiniEats</h1>
@@ -65,9 +64,5 @@
         <% }) %>
       </tbody>
     </table>
-  <% } else { %>
-    <p>You do not have permission to view this page.</p>
-  <% } %>
-  
 </body>
 </html>
