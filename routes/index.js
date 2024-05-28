@@ -184,6 +184,9 @@ router.post('/deleteProduct/:id', async (req, res) => {
 });
 
 router.get('/admin', async (req, res) => {
+  console.log('User:', req.user); // Check the user object
+  console.log('Authenticated:', req.isAuthenticated());
+  
   if (req.user && req.user.role === 'admin') {
     try {
       const items = await Item.find();
