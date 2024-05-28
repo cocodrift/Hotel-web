@@ -23,9 +23,6 @@ const generateSessionSecret = () => {
 // Generate session secret
 const sessionSecret = generateSessionSecret();
 
-
-const sessionSecret = process.env.SESSION_SECRET || 'default_secret_key';
-
 // Set up session middleware
 router.use(session({
     secret: sessionSecret,
