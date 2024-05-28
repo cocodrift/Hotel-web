@@ -26,21 +26,25 @@ router.get('/login', (req, res) => {
 
 // Login Action Route
 router.post('/login', (req, res, next) => {
-    passport.authenticate('local', (err, user, info) => {
-        if (err) {
-            return next(err);
-        }
-        if (!user) {
-            return res.redirect('/login'); // Redirect to login page on authentication failure
-        }
-        req.logIn(user, (err) => {
-            if (err) {
-                return next(err);
-            }
-            return res.redirect('/admin'); // Redirect to admin page on successful login
-        });
-    })(req, res, next);
+  passport.authenticate('local', (err, user, info) => {
+      if (err) {
+          return next(err); // Pass the error to the error handler
+      }
+      if (!user) {
+          // Authentication failed, redirect to login page with flash message
+          req.flash('error', 'Invalid username or password');
+          return res.redirect('/login');
+      }
+      req.logIn(user, (err) => {
+          if (err) {
+              return next(err); // Pass the error to the error handler
+          }
+          // Authentication succeeded, redirect to admin page
+          return res.redirect('/admin');
+      });
+  })(req, res, next);
 });
+
 
 
 router.get('/canteen', async (req, res) => {
