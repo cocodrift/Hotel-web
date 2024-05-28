@@ -4,8 +4,13 @@ const uuid = require('uuid');
 const Item = require('../models/Item');
 const Order = require('../models/Order');
 const Counter = require('../models/Counter');
-require('../config/passport-config');
 const passport = require('passport');
+const cookieParser = require('cookie-parser'); // Import cookie-parser
+
+require('../config/passport-config');
+
+// Use cookie-parser middleware
+router.use(cookieParser());
 
 // Custom session middleware
 router.use((req, res, next) => {
@@ -52,7 +57,7 @@ router.get('/logout', (req, res) => {
   res.redirect('/');
 });
 
-router.get('/admin', isAdmin, async (req, res) => {
+router.get('/admin', isAdmin, async (req, res, next) => {
   try {
     const items = await Item.find();
     res.render('admin', { items, user: req.user });
