@@ -213,7 +213,7 @@ router.post('/deleteProduct/:id', ensureAuthenticated, ensureAdmin, async (req, 
 });
 
 // Route to display all products on the admin page
-router.get('/admin',  ensureAuthenticated, ensureAdmin, async (req, res) => {
+router.get('/admin',  async (req, res) => {
   try {
     const items = await Item.find();
     res.render('admin', { items });
