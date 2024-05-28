@@ -22,7 +22,7 @@ router.use(session({
 }));
 
 router.get('/register', (req, res) => {
-  res.render('adminr');
+  res.render('register');
 });
 
 
