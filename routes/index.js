@@ -4,10 +4,6 @@ const Item = require('../models/Item');
 const Order = require('../models/Order');
 const Counter = require('../models/Counter');
 
-// Initialize Passport middleware
-router.use(passport.initialize());
-router.use(passport.session());
-
 // Centralized error handler
 function errorHandler(err, req, res, next) {
   console.error(err);
