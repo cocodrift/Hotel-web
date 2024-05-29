@@ -76,7 +76,8 @@ app.use((err, req, res, next) => {
 
 // Render login page
 app.get('/login', (req, res) => {
-  res.render('login', { message: req.flash('error') });
+  res.render('login',
+  );
 });
 
 // Handle login form submission
