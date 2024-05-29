@@ -30,10 +30,18 @@ router.get('/login', (req, res) => {
   }
 })
 
-router.post('/login', passport.authenticate('local', {
-  successRedirect: '/admin',
-  failureFlash: true
-}));
+router.post('/login', (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) return next(err);
+    if (!user) return res.redirect('/login');
+    req.logIn(user, (err) => {
+      if (err) return next(err);
+      console.log('User logged in:', user); // Log user details
+      console.log('Session:', req.session); // Log session details
+      return res.redirect('/admin');
+    });
+  })(req, res, next);
+});
 
 // Handle logout
 router.get('/logout', (req, res) => {
