@@ -21,7 +21,7 @@ router.get('/editProduct/:id', isAuthenticated, adminController.getEditProduct);
 // Handle editing a product
 router.post('/editProduct/:id', isAuthenticated, adminController.postEditProduct);
 
-// Handle deleting a product
+// Handle  deleting a product
 router.post('/deleteProduct/:id', isAuthenticated, adminController.deleteProduct);
 
 module.exports = router;

@@ -21,7 +21,13 @@ router.get('/admin', isAuthenticated, async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-
+router.get('/login', (req, res) => {
+  try{
+    res.render ('login');
+  } catch (error) {
+    next(error);
+  }
+})
 
 // Handle logout
 router.get('/logout', (req, res) => {
