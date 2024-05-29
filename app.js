@@ -74,6 +74,18 @@ app.use((err, req, res, next) => {
   res.render('error', { message: err.message });
 });
 
+// Render login page
+app.get('/login', (req, res) => {
+  res.render('login', { message: req.flash('error') });
+});
+
+// Handle login form submission
+app.post('/login', passport.authenticate('local', {
+  successRedirect: '/dashboard',
+  failureRedirect: '/login',
+  failureFlash: true
+}));
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

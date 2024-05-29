@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const flash = require('connect-flash'); 
 const passport = require('passport');
 const Item = require('../models/Item');
 const Order = require('../models/Order');
@@ -13,40 +12,6 @@ const { errorHandler } = require('../middleware/common');
 router.get('/', (req, res) => {
   res.render('index');
 });
-
-// Render registration page
-router.get('/register', (req, res) => {
-  res.render('register');
-});
-
-// Handle user registration
-router.post('/register', async (req, res) => {
-  const { username, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const newUser = new User({ username, password: hashedPassword });
-
-  try {
-    await newUser.save();
-    req.flash('success_msg', 'You are registered and can now log in');
-    res.redirect('/login');
-  } catch (err) {
-    console.error(err);
-    req.flash('error_msg', 'Registration failed');
-    res.redirect('/register');
-  }
-});
-
-// Render login page
-router.get('/login', (req, res) => {
-  res.render('login', { message: req.flash('error') });
-});
-
-// Handle login form submission
-router.post('/login', passport.authenticate('local', {
-  successRedirect: '/dashboard',
-  failureRedirect: '/login',
-  failureFlash: true
-}));
 
 // Handle logout
 router.get('/logout', (req, res) => {
