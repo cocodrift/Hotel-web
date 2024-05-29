@@ -3,51 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Welcome to MiniEats Ke, your home away from home. Experience luxury, comfort, and exquisite cuisine in the heart of Kenya.">
-    <meta name="keywords" content="hotel, MiniEats Ke, luxury hotel, Kenya, accommodation, restaurant, travel">
-    <meta name="author" content="MiniEats Ke">
-    <meta property="og:title" content="MiniEats Ke - Your Luxury Hotel in Kenya">
-    <meta property="og:description" content="Experience luxury, comfort, and exquisite cuisine in the heart of Kenya at MiniEats Ke.">
-    <meta property="og:image" content="https://www.yourwebsite.com/images/og-image.jpg">
-    <meta property="og:url" content="https://www.yourwebsite.com">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="MiniEats Ke - Your Luxury Hotel in Kenya">
-    <meta name="twitter:description" content="Experience luxury, comfort, and exquisite cuisine in the heart of Kenya at MiniEats Ke.">
-    <meta name="twitter:image" content="https://www.yourwebsite.com/images/twitter-image.jpg">
-    <link rel="icon" href="/images/pp.jpg" type="image/x-icon">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/styles.css">
-    <title>MiniEats Ke</title>
-    <style>
-        /* Hide elements with class 'no-print' in print view */
-        @media print {
-            .no-print {
-                display: none;
-            }
-        }
-    </style>
+    <title>Orders</title>
 </head>
 <body>
-    <header class="navbar">
+    <header>
         <img src="/images/logo.png" alt="MiniEats Logo">
         <h1>Orders</h1>
         <nav>
             <ul>
-                <li><a href="/admin">Admin</a></li>
+                <li><a href="/">Home</a></li>
+                <li><a href="/canteen">Canteen</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/orders">Orders</a></li>
             </ul>
         </nav>
     </header>
     <main>
-        <h2>Orders</h2>
-        <div>
+        <h2>All Orders</h2>
         <ul id="order-list">
             <% orders.forEach(order => { %>
-                <li class="order" id="order-<%= order.orderNumber %>">
+                <li class="order">
                     <h3>Order Number: <%= order.orderNumber %></h3>
-                    <p>Table: <%= order.tableNumber %></p>
                     <p>Placed At: <%= order.placedAt.toLocaleString() %></p>
                     <p>Total Price: <%= new Intl.NumberFormat('en-KE', { style: 'currency', currency: 'KES' }).format(order.totalPrice) %></p>
                     <h4>Items:</h4>
@@ -58,14 +35,12 @@
                             </li>
                         <% }); %>
                     </ul>
-                    <form action="/orders/<%= order._id %>/clear" method="POST" class="no-print">
+                    <form action="/orders/clear/<%= order._id %>" method="POST">
                         <button type="submit">Mark as Cleared</button>
                     </form>
-                    <button type="button" onclick="printOrder()">Print Order</button>
                 </li>
             <% }); %>
         </ul>
-       </div>
     </main>
     <footer class="footer">
         <div class="footer-content">
@@ -95,18 +70,5 @@
             <p>&copy; 2024 MiniEats Ke. All rights reserved.</p>
         </div>
     </footer>
-    <script>
-        function printOrder(orderNumber) {
-            const orderElement = document.getElementById(`order-${orderNumber}`);
-            const printWindow = window.open('', '', 'height=400,width=600');
-            printWindow.document.write('<html><head><title>Print Order</title>');
-            printWindow.document.write('<link rel="stylesheet" href="/css/styles.css" type="text/css" />');
-            printWindow.document.write('</head><body >');
-            printWindow.document.write(orderElement.outerHTML);
-            printWindow.document.write('</body></html>');
-            printWindow.document.close();
-            printWindow.print();
-        }
-    </script>
 </body>
 </html>

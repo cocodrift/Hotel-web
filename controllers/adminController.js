@@ -34,6 +34,15 @@ exports.getOrderSummary = async (req, res, next) => {
   }
 };
 
+exports.getOrders = async (req, res, next) => {
+  try {
+    const orders = await Order.find({ status: 'active' }).sort({ placedAt: -1 });
+    res.render('orders', { user: req.session.user, orders });
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.getEditProduct = async (req, res, next) => {
   try {
     const item = await Item.findById(req.params.id);
@@ -72,15 +81,6 @@ exports.deleteProduct = async (req, res, next) => {
   }
 };
 
-exports.getOrders = async (req, res, next) => {
-  try {
-    const orders = await Order.find({ status: 'active' }).sort({ placedAt: -1 });
-    res.render('orders', { user: req.session.user, orders });
-  } catch (err) {
-    next(err);
-  }
-};
-
 exports.clearOrder = async (req, res) => {
   try {
     await Order.findByIdAndUpdate(req.params.id, { status: 'cleared' });
@@ -90,4 +90,3 @@ exports.clearOrder = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
-
