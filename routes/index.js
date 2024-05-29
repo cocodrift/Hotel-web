@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
   res.render('index');
 });
 
-router.get('/admin', async (req, res) => {
+router.get('/admin', isAuthenticated, async (req, res) => {
   try {
     const items = await Item.find();
     console.log('Items fetched for admin page:', items); // Debugging output
