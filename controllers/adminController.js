@@ -10,7 +10,7 @@ exports.postAddProduct = async (req, res, next) => {
   try {
     const newItem = new Item({ name, price: priceInKES, currency: 'KES', category, imageUrl, user: req.session.user });
     await newItem.save();
-    res.redirect('/canteen');
+    res.redirect('/admin');
   } catch (error) {
     next(error);
   }
