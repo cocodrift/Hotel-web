@@ -127,7 +127,7 @@
             if (existingItemIndex > -1) {
                 cart[existingItemIndex].quantity += 1;
             } else {
-                cart.push({ id, name, price, quantity: 1 });
+                cart.push({ id, name, priceInKES, quantity: 1 });
             }
             localStorage.setItem('cart', JSON.stringify(cart));
             updateCartCount();
@@ -156,7 +156,7 @@
         function calculateTotalPrice(cart) {
     let totalPrice = 0;
     for (const item of cart) {
-        totalPrice += item.price * item.quantity;
+        totalPrice += item.priceInKES * item.quantity;
     }
     return totalPrice;
 }
