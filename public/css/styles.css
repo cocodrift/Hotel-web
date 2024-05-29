@@ -32,7 +32,6 @@ main h2 {
 /* Navbar styles */
 .navbar {
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   padding: 20px;
@@ -45,10 +44,13 @@ main h2 {
   border-radius: 50%;
 }
 
+nav {
+  margin-left: auto; /* Align nav to the right */
+}
+
 nav ul {
   list-style: none;
   display: flex;
-  flex-wrap: wrap;
   gap: 10px;
 }
 
