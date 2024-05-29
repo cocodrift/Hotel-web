@@ -84,7 +84,7 @@ exports.deleteProduct = async (req, res, next) => {
 exports.clearOrder = async (req, res) => {
   try {
     const orderId = req.params.id;
-    // Find the order by ID and update its status
+    // Find the order by ID and update its status to 'cleared'
     await Order.findByIdAndUpdate(orderId, { status: 'cleared' });
     res.redirect('/orders'); // Redirect to the orders page after clearing the order
   } catch (error) {
@@ -92,3 +92,5 @@ exports.clearOrder = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+
