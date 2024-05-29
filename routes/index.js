@@ -1,28 +1,24 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const session = require('express-session');
 const passport = require('passport');
 const Item = require('../models/Item');
 const Order = require('../models/Order');
 const Counter = require('../models/Counter');
 const User = require('../models/User');
-const { errorHandler} = require('../middleware/common');
+const { errorHandler } = require('../middleware/common');
 
-router.use(session({
-  secret: 'your_secret_key',
-  resave: false,
-  saveUninitialized: true,
-}));
-
+// Render home page
 router.get('/', (req, res) => {
   res.render('index');
 });
 
+// Render registration page
 router.get('/register', (req, res) => {
   res.render('register');
 });
 
+// Handle user registration
 router.post('/register', async (req, res) => {
   const { username, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -30,29 +26,38 @@ router.post('/register', async (req, res) => {
 
   try {
     await newUser.save();
+    req.flash('success_msg', 'You are registered and can now log in');
     res.redirect('/login');
   } catch (err) {
     console.error(err);
+    req.flash('error_msg', 'Registration failed');
     res.redirect('/register');
   }
 });
 
+// Render login page
 router.get('/login', (req, res) => {
   res.render('login', { message: req.flash('error') });
 });
 
 // Handle login form submission
 router.post('/login', passport.authenticate('local', {
-  successRedirect: '/dashboard', // Redirect here on successful login
-  failureRedirect: '/login', // Redirect back to the login page on failure
-  failureFlash: true // Allow flash messages for errors
+  successRedirect: '/dashboard',
+  failureRedirect: '/login',
+  failureFlash: true
 }));
 
+// Handle logout
 router.get('/logout', (req, res) => {
-  req.session.destroy();
-  res.redirect('/');
+  req.logout(err => {
+    if (err) return next(err);
+    req.flash('success_msg', 'You are logged out');
+    req.session.destroy();
+    res.redirect('/');
+  });
 });
 
+// Render canteen page
 router.get('/canteen', async (req, res, next) => {
   try {
     const items = await Item.find();
@@ -62,10 +67,12 @@ router.get('/canteen', async (req, res, next) => {
   }
 });
 
+// Render contact page
 router.get('/contact', (req, res) => {
   res.render('contact');
 });
 
+// Handle placing orders
 router.post('/place-order', async (req, res, next) => {
   const { cart, tableNumber, paymentMethod } = req.body;
   if (!cart || !Array.isArray(cart)) {

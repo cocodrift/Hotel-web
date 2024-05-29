@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+const flash = require('connect-flash');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const passport = require('./middleware/passportConfig'); // Ensure passportConfig is correct
@@ -56,6 +57,16 @@ const appRouter = require('./routes/index');
 const adminRouter = require('./routes/admin');
 app.use('/', appRouter);
 app.use('/admin', require('./middleware/isAuthenticated'), adminRouter);
+
+// Flash middleware
+app.use(flash());
+
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
+  next();
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
