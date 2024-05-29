@@ -11,9 +11,17 @@ router.get('/', (req, res) => {
   res.render('index');
 });
 
-router.get('/admin', isAuthenticated, (req, res) => {
-  res.render('admin');
+router.get('/admin', async (req, res) => {
+  try {
+    const items = await Item.find();
+    console.log('Items fetched for admin page:', items); // Debugging output
+    res.render('admin', { items });
+  } catch (err) {
+    console.error('Error fetching items for admin page:', err);
+    res.status(500).send('Internal Server Error');
+  }
 });
+
 
 // Handle logout
 router.get('/logout', (req, res) => {
