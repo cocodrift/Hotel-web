@@ -3,6 +3,7 @@ const router = express.Router();
 const Item = require('../models/Item');
 const Order = require('../models/Order');
 const Counter = require('../models/Counter');
+const passport = require ('../middleware/passportConfig')
 const { errorHandler} = require('../middleware/common');
 const isAuthenticated = require('../middleware/isAuthenticated');
 
@@ -28,6 +29,11 @@ router.get('/login', (req, res) => {
     next(error);
   }
 })
+
+router.post('/login', passport.authenticate('local', {
+  successRedirect: '/admin',
+  failureFlash: true
+}));
 
 // Handle logout
 router.get('/logout', (req, res) => {

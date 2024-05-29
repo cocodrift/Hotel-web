@@ -74,11 +74,6 @@ app.use((err, req, res, next) => {
   res.render('error', { message: err.message });
 });
 
-// Handle login form submission
-app.post('/login', passport.authenticate('local', {
-  successRedirect: '/admin',
-  failureFlash: true
-}));
 
 // Start the server
 app.listen(port, () => {
