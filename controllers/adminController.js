@@ -81,22 +81,14 @@ exports.deleteProduct = async (req, res, next) => {
   }
 };
 
-
-exports.clearOrder = async (req, res, next) => {
-  const { orderId } = req.params;
-
+exports.clearOrder = async (req, res) => {
   try {
-    const order = await Order.findById(orderId);
-
-    if (!order) {
-      return res.status(404).send('Order not found');
-    }
-
-    order.status = 'cleared'; // Assuming you have a 'status' field in your Order model
-    await order.save();
-
-    res.redirect('/admin/orders');
-  } catch (err) {
-    next(err);
+    const orderId = req.params.id;
+    // Find the order by ID and update its status
+    await Order.findByIdAndUpdate(orderId, { status: 'cleared' });
+    res.redirect('/orders'); // Redirect to the orders page after clearing the order
+  } catch (error) {
+    console.error('Error clearing the order:', error);
+    res.status(500).send('Internal Server Error');
   }
 };
