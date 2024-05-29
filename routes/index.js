@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
+const passport = require('passport');
 const Item = require('../models/Item');
 const Order = require('../models/Order');
 const Counter = require('../models/Counter');
@@ -37,25 +38,15 @@ router.post('/register', async (req, res) => {
 });
 
 router.get('/login', (req, res) => {
-  res.render('login');
+  res.render('login', { message: req.flash('error') });
 });
 
-router.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-
-  try {
-    const user = await User.findOne({ username });
-    if (user && await bcrypt.compare(password, user.password)) {
-      req.session.user = user;
-      res.redirect('/admin');
-    } else {
-      res.redirect('/login');
-    }
-  } catch (err) {
-    console.error(err);
-    res.redirect('/login');
-  }
-});
+// Handle login form submission
+router.post('/login', passport.authenticate('local', {
+  successRedirect: '/dashboard', // Redirect here on successful login
+  failureRedirect: '/login', // Redirect back to the login page on failure
+  failureFlash: true // Allow flash messages for errors
+}));
 
 router.get('/logout', (req, res) => {
   req.session.destroy();

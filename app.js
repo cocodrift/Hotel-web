@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
-const passport = require('./middleware/passportConfig'); // Import the passport configuration
+const passport = require('./middleware/passportConfig'); // Ensure passportConfig is correct
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -38,10 +38,13 @@ mongoose.connect(mongoURI, {
 
 // Set up session with connect-mongo
 app.use(session({
-  secret: 'your_secret_key',
+  secret: process.env.SESSION_SECRET || 'your_secret_key',
   resave: false,
-  saveUninitialized: true,
-  store: MongoStore.create({ mongoUrl: mongoURI })
+  saveUninitialized: false, // Typically set to false to comply with GDPR laws
+  store: MongoStore.create({ mongoUrl: mongoURI }),
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 // 1 day
+  }
 }));
 
 // Initialize Passport and restore authentication state, if any, from the session

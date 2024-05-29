@@ -1,17 +1,19 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const bcrypt = require('bcryptjs');
-const User = require('../models/User'); // Adjust the path according to your project structure
+const User = require('../models/User'); // Adjust the path as needed
 
-passport.use(new LocalStrategy(
-  async (username, password, done) => {
+passport.use(new LocalStrategy({
+    usernameField: 'username',
+    passwordField: 'password'
+  },
+  async (username, password, done) => { // Changed 'email' to 'username'
     try {
       const user = await User.findOne({ username });
       if (!user) {
         return done(null, false, { message: 'Incorrect username.' });
       }
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) {
+      const isValid = await user.isValidPassword(password);
+      if (!isValid) {
         return done(null, false, { message: 'Incorrect password.' });
       }
       return done(null, user);
@@ -30,7 +32,7 @@ passport.deserializeUser(async (id, done) => {
     const user = await User.findById(id);
     done(null, user);
   } catch (err) {
-    done(err);
+    done(err, null);
   }
 });
 
