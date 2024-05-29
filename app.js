@@ -81,7 +81,7 @@ app.get('/login', (req, res) => {
 
 // Handle login form submission
 app.post('/login', passport.authenticate('local', {
-  successRedirect: '/dashboard',
+  successRedirect: '/admin',
   failureRedirect: '/login',
   failureFlash: true
 }));
