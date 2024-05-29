@@ -13,10 +13,6 @@ router.get('/', (req, res) => {
   res.render('index');
 });
 
-router.get('/admin', (req, res) => {
-  res.render('admin');
-});
-
 // Handle logout
 router.get('/logout', (req, res) => {
   req.logout(err => {

@@ -3,6 +3,11 @@ const router = express.Router();
 const adminController = require('../controllers/adminController');
 const isAuthenticated = require('../middleware/isAuthenticated');
 
+
+router.get('/admin', isAuthenticated, (req, res) => {
+    res.render('admin');
+  });
+
 // Display add product form
 router.get('/addProducts', isAuthenticated, adminController.getAddProduct);
 
