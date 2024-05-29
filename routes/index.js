@@ -1,12 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcryptjs');
-const passport = require('passport');
 const Item = require('../models/Item');
 const Order = require('../models/Order');
 const Counter = require('../models/Counter');
-const User = require('../models/User');
-const { errorHandler, isAuthenticated } = require('../middleware/common');
+const { errorHandler} = require('../middleware/common');
+const isAuthenticated = require('../middleware/isAuthenticated');
 
 // Render home page
 router.get('/', (req, res) => {
