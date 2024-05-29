@@ -41,26 +41,21 @@ mongoose.connect(mongoURI, {
 app.use(session({
   secret: process.env.SESSION_SECRET || 'your_secret_key',
   resave: false,
-  saveUninitialized: false, // Typically set to false to comply with GDPR laws
+  saveUninitialized: false,
   store: MongoStore.create({ mongoUrl: mongoURI }),
   cookie: {
     maxAge: 1000 * 60 * 60 * 24 // 1 day
   }
 }));
 
+// Initialize connect-flash
+app.use(flash());
+
 // Initialize Passport and restore authentication state, if any, from the session
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Import routes
-const appRouter = require('./routes/index');
-const adminRouter = require('./routes/admin');
-app.use('/', appRouter);
-app.use(require('./middleware/isAuthenticated'), adminRouter);
-
-// Flash middleware
-app.use(flash());
-
+// Set flash messages to response locals
 app.use((req, res, next) => {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
@@ -68,12 +63,17 @@ app.use((req, res, next) => {
   next();
 });
 
+// Import routes
+const appRouter = require('./routes/index');
+const adminRouter = require('./routes/admin');
+app.use('/', appRouter);
+app.use(require('./middleware/isAuthenticated'), adminRouter);
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.render('error', { message: err.message });
 });
-
 
 // Start the server
 app.listen(port, () => {
