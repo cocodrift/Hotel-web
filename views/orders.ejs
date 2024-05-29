@@ -58,7 +58,7 @@
                             </li>
                         <% }); %>
                     </ul>
-                    <form action="/orders/clear/<%= order._id %>" method="POST" class="no-print">
+                    <form action="/orders/<%= order._id %>/clear" method="POST" class="no-print">
                         <button type="submit">Mark as Cleared</button>
                     </form>
                     <button type="button" onclick="printOrder()">Print Order</button>
