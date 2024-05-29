@@ -23,6 +23,8 @@ main h2 {
 }
 
 .header {
+  display: flex;
+  justify-content: space-between;
   text-align: center;
   border-radius: 10px;
 }
