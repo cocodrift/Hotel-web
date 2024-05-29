@@ -162,6 +162,11 @@
 }
 function placeOrder() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    if (cart.length === 0) {
+        alert('Your cart is empty. Please add items to the cart before placing an order.');
+        return;
+    }
+
     const tableNumber = document.getElementById('table-number').value;
     const paymentMethod = document.getElementById('payment-method').value;
 
@@ -190,11 +195,11 @@ function placeOrder() {
         throw new Error('Failed to place order');
     })
     .then(data => {
-        // Handle successful order placement
+    
         console.log('Order placed successfully:', data);
         localStorage.removeItem('cart');
-        loadCart(); // Update the cart display
-        updateCartCount(); // Update the cart count display
+        loadCart(); 
+        updateCartCount();
         alert('Your order has been placed successfully!');
     })
     .catch(error => {
