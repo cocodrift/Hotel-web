@@ -34,15 +34,6 @@ exports.getOrderSummary = async (req, res, next) => {
   }
 };
 
-exports.getOrders = async (req, res, next) => {
-  try {
-    const orders = await Order.find({ status: 'active' }).sort({ placedAt: -1 });
-    res.render('orders', { user: req.session.user, orders });
-  } catch (err) {
-    next(err);
-  }
-};
-
 exports.getEditProduct = async (req, res, next) => {
   try {
     const item = await Item.findById(req.params.id);
@@ -81,16 +72,22 @@ exports.deleteProduct = async (req, res, next) => {
   }
 };
 
-exports.clearOrder = async (req, res) => {
+exports.getOrders = async (req, res, next) => {
   try {
-    const orderId = req.params.id;
-    // Find the order by ID and update its status to 'cleared'
-    await Order.findByIdAndUpdate(orderId, { status: 'cleared' });
-    res.redirect('/orders'); // Redirect to the orders page after clearing the order
-  } catch (error) {
-    console.error('Error clearing the order:', error);
-    res.status(500).send('Internal Server Error');
+    const orders = await Order.find({ status: 'active' }).sort({ placedAt: -1 });
+    res.render('orders', { user: req.session.user, orders });
+  } catch (err) {
+    next(err);
   }
 };
 
+exports.clearOrder = async (req, res) => {
+  try {
+    await Order.findByIdAndUpdate(req.params.id, { status: 'cleared' });
+    res.redirect('/orders');
+  } catch (err) {
+    console.error('Error updating order status:', err);
+    res.status(500).send('Internal Server Error');
+  }
+};
 
