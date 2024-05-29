@@ -56,7 +56,7 @@ app.use(passport.session());
 const appRouter = require('./routes/index');
 const adminRouter = require('./routes/admin');
 app.use('/', appRouter);
-app.use('/admin', require('./middleware/isAuthenticated'), adminRouter);
+app.use(require('./middleware/isAuthenticated'), adminRouter);
 
 // Flash middleware
 app.use(flash());
