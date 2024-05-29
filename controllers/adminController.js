@@ -80,3 +80,23 @@ exports.deleteProduct = async (req, res, next) => {
     next(error);
   }
 };
+
+
+exports.clearOrder = async (req, res, next) => {
+  const { orderId } = req.params;
+
+  try {
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).send('Order not found');
+    }
+
+    order.status = 'cleared'; // Assuming you have a 'status' field in your Order model
+    await order.save();
+
+    res.redirect('/admin/orders');
+  } catch (err) {
+    next(err);
+  }
+};

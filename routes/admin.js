@@ -24,4 +24,8 @@ router.post('/editProduct/:id', isAuthenticated, adminController.postEditProduct
 // Handle  deleting a product
 router.post('/deleteProduct/:id', isAuthenticated, adminController.deleteProduct);
 
+// Assuming you have a router defined in your admin routes file
+router.post('/orders/:orderId/clear', adminController.clearOrder);
+
+
 module.exports = router;
