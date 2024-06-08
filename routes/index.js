@@ -4,6 +4,8 @@ const router = express.Router();
 const homeController = require('../controllers/homeController');
 const adminController = require('../controllers/adminController');
 const authController = require('../controllers/authController');
+const canteenController = require('../controllers/canteenController');
+const contactController = require('../controllers/contactController');
 const orderController = require('../controllers/orderController');
 const isAuthenticated = require('../middleware/isAuthenticated');
 const { errorHandler } = require('../middleware/common');
@@ -20,19 +22,10 @@ router.post('/login', authController.loginUser);
 router.get('/logout', authController.logoutUser);
 
 // Render canteen page
-router.get('/canteen', async (req, res, next) => {
-  try {
-    const items = await Item.find();
-    res.render('canteen', { items });
-  } catch (err) {
-    next(err);
-  }
-});
+router.get('/canteen', canteenController.renderCanteenPage);
 
 // Render contact page
-router.get('/contact', (req, res) => {
-  res.render('contact');
-});
+router.get('/contact', contactController.renderContactPage);
 
 // Handle placing orders
 router.post('/place-order', orderController.placeOrder);
