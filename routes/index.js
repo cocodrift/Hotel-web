@@ -1,57 +1,23 @@
+// routes/index.js
 const express = require('express');
 const router = express.Router();
-const Item = require('../models/Item');
-const Order = require('../models/Order');
-const Counter = require('../models/Counter');
-const passport = require ('../middleware/passportConfig')
-const { errorHandler} = require('../middleware/common');
+const homeController = require('../controllers/homeController');
+const adminController = require('../controllers/adminController');
+const authController = require('../controllers/authController');
+const orderController = require('../controllers/orderController');
 const isAuthenticated = require('../middleware/isAuthenticated');
+const { errorHandler } = require('../middleware/common');
 
 // Render home page
-router.get('/', (req, res) => {
-  res.render('index');
-});
+router.get('/', homeController.renderHomePage);
 
-router.get('/admin', isAuthenticated, async (req, res) => {
-  try {
-    const items = await Item.find();
-    console.log('Items fetched for admin page:', items); // Debugging output
-    res.render('admin', { items });
-  } catch (err) {
-    console.error('Error fetching items for admin page:', err);
-    res.status(500).send('Internal Server Error');
-  }
-});
-router.get('/login', (req, res) => {
-  try{
-    res.render ('login');
-  } catch (error) {
-    next(error);
-  }
-})
+// Admin page
+router.get('/admin', isAuthenticated, adminController.renderAdminPage);
 
-router.post('/login', (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
-    if (err) return next(err);
-    if (!user) return res.redirect('/login');
-    req.logIn(user, (err) => {
-      if (err) return next(err);
-      console.log('User logged in:', user); // Log user details
-      console.log('Session:', req.session); // Log session details
-      return res.redirect('/admin');
-    });
-  })(req, res, next);
-});
-
-// Handle logout
-router.get('/logout', (req, res) => {
-  req.logout(err => {
-    if (err) return next(err);
-    req.flash('success_msg', 'You are logged out');
-    req.session.destroy();
-    res.redirect('/');
-  });
-});
+// Login routes
+router.get('/login', authController.renderLoginPage);
+router.post('/login', authController.loginUser);
+router.get('/logout', authController.logoutUser);
 
 // Render canteen page
 router.get('/canteen', async (req, res, next) => {
@@ -69,44 +35,7 @@ router.get('/contact', (req, res) => {
 });
 
 // Handle placing orders
-router.post('/place-order', async (req, res, next) => {
-  const { cart, tableNumber, paymentMethod } = req.body;
-  if (!cart || !Array.isArray(cart)) {
-    return res.status(400).json({ error: 'Invalid cart data' });
-  }
-
-  const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
-  try {
-    const today = new Date().setHours(0, 0, 0, 0); // Get today's date at midnight
-    const counter = await Counter.findOne({ name: 'orderNumber' });
-
-    let orderNumber;
-    if (!counter) {
-      // If no counter exists, create a new one
-      const newCounter = new Counter({ name: 'orderNumber', value: 1, lastUpdated: today });
-      await newCounter.save();
-      orderNumber = newCounter.value;
-    } else {
-      const lastUpdated = new Date(counter.lastUpdated).setHours(0, 0, 0, 0);
-      if (lastUpdated < today) {
-        // If the counter was last updated on a different day, reset it
-        counter.value = 1;
-        counter.lastUpdated = today;
-      } else {
-        // Otherwise, increment the counter
-        counter.value += 1;
-      }
-      await counter.save();
-      orderNumber = counter.value;
-    }
-
-    const order = new Order({ orderNumber, items: cart, totalPrice, placedAt: new Date(), tableNumber, paymentMethod });
-    const savedOrder = await order.save();
-    res.status(201).json({ message: 'Order placed successfully!', orderId: savedOrder._id, orderNumber });
-  } catch (err) {
-    next(err);
-  }
-});
+router.post('/place-order', orderController.placeOrder);
 
 // Use the error handler
 router.use(errorHandler);
