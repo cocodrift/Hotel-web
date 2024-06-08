@@ -1,6 +1,17 @@
 const Item = require('../models/Item');
 const Order = require('../models/Order');
 
+exports.renderAdminPage = async (req, res) => {
+  try {
+    const items = await Item.find();
+    console.log('Items fetched for admin page:', items); // Debugging output
+    res.render('admin', { items });
+  } catch (err) {
+    console.error('Error fetching items for admin page:', err);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
 exports.getAddProduct = (req, res) => {
   res.render('addProducts');
 };
