@@ -102,6 +102,7 @@
         function printOrder(button) {
             const orderElement = button.parentElement; // Get the parent <li> element of the button
             const printWindow = window.open('', '_blank'); // Open a new window
+    
             printWindow.document.write(`
                 <html>
                     <head>
@@ -114,9 +115,16 @@
                     </body>
                 </html>
             `);
+            
             printWindow.document.close(); // Close the document for writing
-            printWindow.print(); // Trigger the print dialog
+            
+            // Wait for the document to fully load before triggering print
+            printWindow.onload = function() {
+                printWindow.print(); // Trigger the print dialog
+                printWindow.close(); // Close the print window after printing (optional)
+            };
         }
     </script>
+    
 </body>
 </html>
