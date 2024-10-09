@@ -4,34 +4,27 @@ const Counter = require('../models/Counter');
 
 exports.placeOrder = async (req, res, next) => {
   const { cart, tableNumber, paymentMethod } = req.body;
+  console.log('Received order:', { cart, tableNumber, paymentMethod }); // Log incoming order data
+
   if (!cart || !Array.isArray(cart)) {
     return res.status(400).json({ error: 'Invalid cart data' });
   }
 
   const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
-  try {
-    const today = new Date().setHours(0, 0, 0, 0); // Get today's date at midnight
-    const counter = await Counter.findOne({ name: 'orderNumber' });
+  console.log('Total price calculated:', totalPrice);
 
-    let orderNumber;
-    if (!counter) {
-      // If no counter exists, create a new one
-      const newCounter = new Counter({ name: 'orderNumber', value: 1, lastUpdated: today });
-      await newCounter.save();
-      orderNumber = newCounter.value;
-    } else {
-      const lastUpdated = new Date(counter.lastUpdated).setHours(0, 0, 0, 0);
-      if (lastUpdated < today) {
-        // If the counter was last updated on a different day, reset it
-        counter.value = 1;
-        counter.lastUpdated = today;
-      } else {
-        // Otherwise, increment the counter
-        counter.value += 1;
-      }
-      await counter.save();
-      orderNumber = counter.value;
-    }
+  try {
+    const today = new Date().setHours(0, 0, 0, 0);
+    const counter = await Counter.findOne({ name: 'orderNumber' });
+    console.log('Counter retrieved:', counter);
+
+    // Continue with the rest of the logic and log important variables...
+  } catch (err) {
+    console.error('Error in placeOrder:', err); // Log detailed error information
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
 
     const order = new Order({ orderNumber, items: cart, totalPrice, placedAt: new Date(), tableNumber, paymentMethod });
     const savedOrder = await order.save();
