@@ -4,53 +4,43 @@ const Counter = require('../models/Counter');
 
 exports.placeOrder = async (req, res, next) => {
   const { cart, tableNumber, paymentMethod } = req.body;
+
+  // Validate the cart
   if (!cart || !Array.isArray(cart)) {
     return res.status(400).json({ error: 'Invalid cart data' });
   }
 
+  // Calculate total price
   const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
   try {
     const today = new Date().setHours(0, 0, 0, 0); // Get today's date at midnight
 
-    // Find the current counter, check if it's for today, and reset if necessary
-    const counter = await Counter.findOne({ name: 'orderNumber' });
+    // Atomically find the counter and increment the order number
+    const counter = await Counter.findOneAndUpdate(
+      { name: 'orderNumber' }, // Find the order number counter
+      {
+        $setOnInsert: { lastUpdated: today }, // Set lastUpdated only if a new document is created
+        $inc: { value: 1 },
+      },
+      { new: true, upsert: true } // Create a new counter if none exists
+    );
 
-    let orderNumber;
+    const orderNumber = counter.value; // Use the updated order number
 
-    if (!counter) {
-      // If no counter exists, create a new one starting from 1
-      const newCounter = new Counter({ name: 'orderNumber', value: 1, lastUpdated: today });
-      await newCounter.save();
-      orderNumber = newCounter.value;
-    } else {
-      // If the last updated date is not today, reset the counter
-      const lastUpdated = new Date(counter.lastUpdated).setHours(0, 0, 0, 0);
-      
-      if (lastUpdated < today) {
-        // Reset the counter for the new day
-        counter.value = 1;
-        counter.lastUpdated = today;
-      } else {
-        // Increment the counter if it's the same day
-        counter.value += 1;
-      }
-      
-      await counter.save();
-      orderNumber = counter.value;
-    }
-
+    // Create and save the order
     const order = new Order({
       orderNumber,
       items: cart,
       totalPrice,
       placedAt: new Date(),
       tableNumber,
-      paymentMethod
+      paymentMethod,
     });
 
     const savedOrder = await order.save();
 
+    // Respond with success
     res.status(201).json({ message: 'Order placed successfully!', orderId: savedOrder._id, orderNumber });
   } catch (err) {
     console.error('Error in placeOrder:', err); // Log detailed error information
