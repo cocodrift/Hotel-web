@@ -13,14 +13,32 @@ exports.placeOrder = async (req, res, next) => {
   try {
     const today = new Date().setHours(0, 0, 0, 0); // Get today's date at midnight
 
-    // Atomically find the counter and increment the order number
-    const counter = await Counter.findOneAndUpdate(
-      { name: 'orderNumber', lastUpdated: today },
-      { $inc: { value: 1 }, $set: { lastUpdated: today } },
-      { new: true, upsert: true } // Create a new counter if none exists
-    );
+    // Find the current counter, check if it's for today, and reset if necessary
+    const counter = await Counter.findOne({ name: 'orderNumber' });
 
-    const orderNumber = counter.value; // Use the updated order number
+    let orderNumber;
+
+    if (!counter) {
+      // If no counter exists, create a new one starting from 1
+      const newCounter = new Counter({ name: 'orderNumber', value: 1, lastUpdated: today });
+      await newCounter.save();
+      orderNumber = newCounter.value;
+    } else {
+      // If the last updated date is not today, reset the counter
+      const lastUpdated = new Date(counter.lastUpdated).setHours(0, 0, 0, 0);
+      
+      if (lastUpdated < today) {
+        // Reset the counter for the new day
+        counter.value = 1;
+        counter.lastUpdated = today;
+      } else {
+        // Increment the counter if it's the same day
+        counter.value += 1;
+      }
+      
+      await counter.save();
+      orderNumber = counter.value;
+    }
 
     const order = new Order({
       orderNumber,
