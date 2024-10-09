@@ -1,38 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Welcome to MiniEats Ke, your home away from home. Experience luxury, comfort, and exquisite cuisine in the heart of Kenya.">
-    <meta name="keywords" content="hotel, MiniEats Ke, luxury hotel, Kenya, accommodation, restaurant, travel">
-    <meta name="author" content="MiniEats Ke">
-    <meta property="og:title" content="MiniEats Ke - Your Luxury Hotel in Kenya">
-    <meta property="og:description" content="Experience luxury, comfort, and exquisite cuisine in the heart of Kenya at MiniEats Ke.">
-    <meta property="og:image" content="https://www.yourwebsite.com/images/og-image.jpg">
-    <meta property="og:url" content="https://www.yourwebsite.com">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="MiniEats Ke - Your Luxury Hotel in Kenya">
-    <meta name="twitter:description" content="Experience luxury, comfort, and exquisite cuisine in the heart of Kenya at MiniEats Ke.">
-    <meta name="twitter:image" content="https://www.yourwebsite.com/images/twitter-image.jpg">
-    <link rel="icon" href="/images/pp.jpg" type="image/x-icon">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/styles.css">
-    <title>MiniEats Ke</title>
-    <style>
-        /* Optional: Add some styles for the print button */
-        .print-button {
-            margin-top: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-    </style>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Welcome to MiniEats Ke, your home away from home. Experience luxury, comfort, and exquisite cuisine in the heart of Kenya.">
+        <meta name="keywords" content="hotel, MiniEats Ke, luxury hotel, Kenya, accommodation, restaurant, travel">
+        <meta name="author" content="MiniEats Ke">
+        <meta property="og:title" content="MiniEats Ke - Your Luxury Hotel in Kenya">
+        <meta property="og:description" content="Experience luxury, comfort, and exquisite cuisine in the heart of Kenya at MiniEats Ke.">
+        <meta property="og:image" content="https://www.yourwebsite.com/images/og-image.jpg">
+        <meta property="og:url" content="https://www.yourwebsite.com">
+        <meta property="og:type" content="website">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="MiniEats Ke - Your Luxury Hotel in Kenya">
+        <meta name="twitter:description" content="Experience luxury, comfort, and exquisite cuisine in the heart of Kenya at MiniEats Ke.">
+        <meta name="twitter:image" content="https://www.yourwebsite.com/images/twitter-image.jpg">
+        <link rel="icon" href="/images/pp.jpg" type="image/x-icon">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="/css/styles.css">
+        <title>MiniEats Ke</title>
 </head>
 <body>
     <header class="navbar">
@@ -63,8 +51,6 @@
                     <form action="/orders/clear/<%= order._id %>" method="POST">
                         <button type="submit">Mark as Cleared</button>
                     </form>
-                    <!-- Print Button -->
-                    <button class="print-button" onclick="printOrder('<%= order.orderNumber %>')">Print Order</button>
                 </li>
             <% }); %>
         </ul>
@@ -97,34 +83,5 @@
             <p>&copy; 2024 MiniEats Ke. All rights reserved.</p>
         </div>
     </footer>
-
-    <script>
-        function printOrder(button) {
-            const orderElement = button.parentElement; // Get the parent <li> element of the button
-            const printWindow = window.open('', '_blank'); // Open a new window
-    
-            printWindow.document.write(`
-                <html>
-                    <head>
-                        <title>Print Order</title>
-                        <link rel="stylesheet" href="/css/styles.css">
-                    </head>
-                    <body>
-                        <h2>Order Details</h2>
-                        ${orderElement.outerHTML} <!-- Add the order details -->
-                    </body>
-                </html>
-            `);
-            
-            printWindow.document.close(); // Close the document for writing
-            
-            // Wait for the document to fully load before triggering print
-            printWindow.onload = function() {
-                printWindow.print(); // Trigger the print dialog
-                printWindow.close(); // Close the print window after printing (optional)
-            };
-        }
-    </script>
-    
 </body>
 </html>
