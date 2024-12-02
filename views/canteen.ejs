@@ -65,8 +65,8 @@
             <span class="close" id="close-cart-modal">&times;</span>
             <h2>Your Cart</h2>
             <ul id="cart-list"></ul>
-            <label for="phone-number">Phone Number:</label>
-            <input type="text" id="phone-number" name="phone-number" required placeholder="Enter your phone number">
+            <label for="phone-number">phoneNumber Number:</label>
+            <input type="text" id="phone-number" name="phone-number" required>
     
             <label for="payment-method">Payment Method:</label>
             <select id="payment-method" name="payment-method" required>
@@ -74,92 +74,197 @@
                 <option value="cash">Cash</option>
             </select>
             <button onclick="placeOrder()">Place Order</button>
-
-            <!-- Payment Info Dialog -->
-            <div id="payment-info" class="info-dialog">
-                <p>Payment Phone Number: <strong>0797054212</strong></p>
-                <p>You will receive a call to confirm your order.</p>
-            </div>
         </div>
     </div>
      
+     
     <footer class="footer">
         <div class="footer-content">
-            <div class="footer-section links">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/about">About</a></li>
-                </ul>
+          
+          <div class="footer-section links">
+            <h3>Quick Links</h3>
+            <ul>
+              <li><a href="/">Home</a></li>
+              <li><a href="/about">About</a></li>
+            </ul>
+          </div>
+          <div class="footer-section contact">
+            <h3>Contact Us</h3>
+            <p>Email: minieatske@gmail.com</p>
+            <p>Phone: +254797054212</p>
+          </div>
+          <div class="footer-section social">
+            <h3>Follow Us</h3>
+            <div class="social-icons">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"><FaFacebook /></a>
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"><FaTwitter /></a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"><FaInstagram /></a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"><FaLinkedin /></a>
             </div>
-            <div class="footer-section contact">
-                <h3>Contact Us</h3>
-                <p>Email: minieatske@gmail.com</p>
-                <p>Phone: +254797054212</p>
-            </div>
-            <div class="footer-section social">
-                <h3>Follow Us</h3>
-                <div class="social-icons">
-                    <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"><FaFacebook /></a>
-                    <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"><FaTwitter /></a>
-                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"><FaInstagram /></a>
-                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"><FaLinkedin /></a>
-                </div>
-            </div>
+          </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2024 minieatske. All rights reserved.</p>
+          <p>&copy; 2024 minieatske. All rights reserved.</p>
         </div>
     </footer>
     
     <script>
-        function placeOrder() {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            if (cart.length === 0) {
-                alert('Your cart is empty. Please add items to the cart before placing an order.');
-                return;
-            }
-
-            const phoneNumber = document.getElementById('phone-number').value;
-            const paymentMethod = document.getElementById('payment-method').value;
-
-            if (!phoneNumber || !paymentMethod) {
-                alert('Please enter your phone number and select a payment method.');
-                return;
-            }
-
-            const orderData = {
-                cart,
-                phoneNumber,
-                paymentMethod
-            };
-
-            fetch('/place-order', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(orderData),
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
+        function filterItems(category) {
+            const items = document.querySelectorAll('.item');
+            items.forEach(item => {
+                const categoryValue = item.getAttribute('data-category');
+                if (categoryValue === category) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
                 }
-                throw new Error('Failed to place order');
-            })
-            .then(data => {
-                console.log('Order placed successfully:', data);
-                localStorage.removeItem('cart');
-                loadCart();
-                updateCartCount();
-                alert('Your order has been placed successfully!');
-                document.getElementById('payment-info').style.display = 'block';
-            })
-            .catch(error => {
-                console.error('Error placing order:', error.message);
-                alert('Failed to place order. Please try again later.');
             });
         }
+    
+        function addToCart(id, name, price) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const existingItemIndex = cart.findIndex(item => item.id === id);
+            if (existingItemIndex > -1) {
+                cart[existingItemIndex].quantity += 1;
+            } else {
+                cart.push({ id, name, price, quantity: 1 });
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            displayAddToCartMessage(name);
+        }
+    
+        function removeFromCart(id) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const itemIndex = cart.findIndex(item => item.id === id);
+            if (itemIndex > -1) {
+                cart.splice(itemIndex, 1);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                loadCart();
+                updateCartCount();
+            }
+        }
+    
+        function displayAddToCartMessage(itemName) {
+            const message = document.createElement('div');
+            message.classList.add('cart-message');
+            message.textContent = `${itemName} has been added to your cart.`;
+            document.body.appendChild(message);
+            setTimeout(() => message.remove(), 2000);
+        }
+    
+        function calculateTotalPrice(cart) {
+    let totalPrice = 0;
+    for (const item of cart) {
+        totalPrice += item.price * item.quantity;
+    }
+    return totalPrice;
+}
+function placeOrder() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    if (cart.length === 0) {
+        alert('Your cart is empty. Please add items to the cart before placing an order.');
+        return;
+    }
+
+    const phoneNumber = document.getElementById('phone-number').value;
+    const paymentMethod = document.getElementById('payment-method').value;
+
+    if (!phoneNumber || !paymentMethod) {
+        alert('Please enter phonenumber number and select a payment method.');
+        return;
+    }
+
+    const orderData = {
+        cart,
+        phoneNumber,
+        paymentMethod
+    };
+
+    fetch('/place-order', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData),
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+        throw new Error('Failed to place order');
+    })
+    .then(data => {
+    
+        console.log('Order placed successfully:', data);
+        localStorage.removeItem('cart');
+        loadCart(); 
+        updateCartCount();
+        alert('Your order has been placed successfully!');
+    })
+    .catch(error => {
+        // Handle error
+        console.error('Error placing order:', error.message);
+        alert('Failed to place order. Please try again later.');
+    });
+}
+
+
+        function loadCart() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartList = document.getElementById('cart-list');
+            cartList.innerHTML = '';
+            let total = 0;
+            cart.forEach(item => {
+                const cartItem = document.createElement('li');
+                cartItem.classList.add('cart-item');
+                cartItem.innerHTML = `
+                    <div>
+                        <h3>${item.name}</h3>
+                        <p>$${item.price} x ${item.quantity}</p>
+                    </div>
+                    <button onclick="removeFromCart('${item.id}')">Remove</button>
+                `;
+                total += item.price * item.quantity;
+                cartList.appendChild(cartItem);
+            });
+            const totalElement = document.createElement('div');
+            totalElement.classList.add('total');
+            totalElement.textContent = `Total: $${total.toFixed(2)}`;
+            cartList.appendChild(totalElement);
+        }
+    
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
+            document.getElementById('cart-count').textContent = cartCount;
+        }
+    
+        // Modal logic
+        const cartLink = document.getElementById('cart-link');
+        const cartModal = document.getElementById('cart-modal');
+        const closeCartModal = document.getElementById('close-cart-modal');
+    
+        cartLink.onclick = function(event) {
+            event.preventDefault();
+            cartModal.style.display = 'block';
+            loadCart();
+        };
+    
+        closeCartModal.onclick = function() {
+            cartModal.style.display = 'none';
+        };
+    
+        window.onclick = function(event) {
+            if (event.target === cartModal) {
+                cartModal.style.display = 'none';
+            }
+        };
+    
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCart();
+            updateCartCount();
+        });
     </script>
 </body>
 </html>

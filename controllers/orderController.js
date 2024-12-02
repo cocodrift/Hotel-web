@@ -3,7 +3,7 @@ const Order = require('../models/Order');
 const Counter = require('../models/Counter');
 
 exports.placeOrder = async (req, res, next) => {
-  const { cart, tableNumber, paymentMethod } = req.body;
+  const { cart, phoneNumber, paymentMethod } = req.body;
 
   // Validate the cart
   if (!cart || !Array.isArray(cart)) {
@@ -34,7 +34,7 @@ exports.placeOrder = async (req, res, next) => {
       items: cart,
       totalPrice,
       placedAt: new Date(),
-      tableNumber,
+      phoneNumber,
       paymentMethod,
     });
 
