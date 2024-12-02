@@ -12,7 +12,7 @@ const orderSchema = new mongoose.Schema({
         }
     ],
     totalPrice: { type: Number, required: true },
-    tableNumber: {
+    phoneNumber: {
         type: String,
         required: true,
     },

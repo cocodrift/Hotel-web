@@ -39,6 +39,7 @@
                 <li class="order">
                     <h3>Order Number: <%= order.orderNumber %></h3>
                     <p>Placed At: <%= order.placedAt.toLocaleString() %></p>
+                    <p>Phone Number: <%= order.phoneNumber %</p>
                     <p>Total Price: <%= new Intl.NumberFormat('en-KE', { style: 'currency', currency: 'KES' }).format(order.totalPrice) %></p>
                     <h4>Items:</h4>
                     <ul>
