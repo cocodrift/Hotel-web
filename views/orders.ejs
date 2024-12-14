@@ -39,6 +39,27 @@
                 <li class="order">
                     <h3>Order Number: <%= order.orderNumber %></h3>
                     <p>Placed At: <%= order.placedAt.toLocaleString() %></p>
+                    <p>Phone Number: <%= order.phoneNumber %></p>
+                    <p>Total Price: <%= new Intl.NumberFormat('en-KE', { style: 'currency', currency: 'KES' }).format(order.totalPrice) %></p>
+                    <h4>Items:</h4>
+                    <ul>
+                        <% order.items.forEach(item => { %>
+                            <li>
+                                <p><%= item.name %> - KES <%= item.price %> x <%= item.quantity %></p>
+                            </li>
+                        <% }); %>
+                    </ul>
+                    <form action="/orders/clear/<%= order._id %>" method="POST">
+                        <button type="submit">Mark as Cleared</button>
+                    </form>
+                </li>
+            <% }); %>
+        </ul>
+        
+            <% orders.forEach(order => { %>
+                <li class="order">
+                    <h3>Order Number: <%= order.orderNumber %></h3>
+                    <p>Placed At: <%= order.placedAt.toLocaleString() %></p>
                     <p>Phone Number: <%= order.phoneNumber %</p>
                     <p>Total Price: <%= new Intl.NumberFormat('en-KE', { style: 'currency', currency: 'KES' }).format(order.totalPrice) %></p>
                     <h4>Items:</h4>
