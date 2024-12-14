@@ -167,11 +167,18 @@ function placeOrder() {
         return;
     }
 
-    const phoneNumber = document.getElementById('phone-number').value;
+    const phoneNumber = document.getElementById('phone-number').value.trim();
     const paymentMethod = document.getElementById('payment-method').value;
 
     if (!phoneNumber || !paymentMethod) {
-        alert('Please enter phonenumber number and select a payment method.');
+        alert('Please enter a phone number and select a payment method.');
+        return;
+    }
+
+    // Kenyan phone number validation
+    const kenyanPhoneRegex = /^(?:254|0)(?:7[0-9]|1[0-2])[0-9]{6}$/;
+    if (!kenyanPhoneRegex.test(phoneNumber)) {
+        alert('Please enter a valid Kenyan phone number.');
         return;
     }
 
@@ -195,7 +202,6 @@ function placeOrder() {
         throw new Error('Failed to place order');
     })
     .then(data => {
-    
         console.log('Order placed successfully:', data);
         localStorage.removeItem('cart');
         loadCart(); 
@@ -203,7 +209,6 @@ function placeOrder() {
         alert('Your order has been placed successfully!');
     })
     .catch(error => {
-        // Handle error
         console.error('Error placing order:', error.message);
         alert('Failed to place order. Please try again later.');
     });
