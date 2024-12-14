@@ -1,13 +1,18 @@
-// controllers/orderController.js
 const Order = require('../models/Order');
 const Counter = require('../models/Counter');
 
 exports.placeOrder = async (req, res, next) => {
   const { cart, phoneNumber, paymentMethod } = req.body;
 
-  // Validate the cart
-  if (!cart || !Array.isArray(cart)) {
-    return res.status(400).json({ error: 'Invalid cart data' });
+  // Validate input data
+  if (!cart || !Array.isArray(cart) || cart.length === 0) {
+    return res.status(400).json({ error: 'Cart is empty or invalid.' });
+  }
+  if (!phoneNumber || typeof phoneNumber !== 'string' || phoneNumber.trim() === '') {
+    return res.status(400).json({ error: 'Invalid phone number.' });
+  }
+  if (!paymentMethod || typeof paymentMethod !== 'string') {
+    return res.status(400).json({ error: 'Invalid payment method.' });
   }
 
   // Calculate total price
@@ -16,19 +21,19 @@ exports.placeOrder = async (req, res, next) => {
   try {
     const today = new Date().setHours(0, 0, 0, 0); // Get today's date at midnight
 
-    // Atomically find the counter and increment the order number
+    // Atomically find and increment the counter for order numbers
     const counter = await Counter.findOneAndUpdate(
-      { name: 'orderNumber' }, // Find the order number counter
+      { name: 'orderNumber' },
       {
-        $setOnInsert: { lastUpdated: today }, // Set lastUpdated only if a new document is created
+        $setOnInsert: { name: 'orderNumber', lastUpdated: today }, // Set initial values if creating
         $inc: { value: 1 },
       },
-      { new: true, upsert: true } // Create a new counter if none exists
+      { new: true, upsert: true }
     );
 
-    const orderNumber = counter.value; // Use the updated order number
+    const orderNumber = counter.value;
 
-    // Create and save the order
+    // Create a new order document
     const order = new Order({
       orderNumber,
       items: cart,
@@ -41,9 +46,13 @@ exports.placeOrder = async (req, res, next) => {
     const savedOrder = await order.save();
 
     // Respond with success
-    res.status(201).json({ message: 'Order placed successfully!', orderId: savedOrder._id, orderNumber });
+    res.status(201).json({
+      message: 'Order placed successfully!',
+      orderId: savedOrder._id,
+      orderNumber,
+    });
   } catch (err) {
-    console.error('Error in placeOrder:', err); // Log detailed error information
+    console.error('Error in placeOrder:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
