@@ -65,7 +65,7 @@
             <span class="close" id="close-cart-modal">&times;</span>
             <h2>Your Cart</h2>
             <ul id="cart-list"></ul>
-            <label for="phone-number">phone number:</label>
+            <label for="phone-number">Phone Number:</label>
             <input type="text" id="phone-number" name="phone-number" required>
     
             <label for="payment-method">Payment Method:</label>
@@ -76,11 +76,9 @@
             <button onclick="placeOrder()">Place Order</button>
         </div>
     </div>
-     
-     
+
     <footer class="footer">
         <div class="footer-content">
-          
           <div class="footer-section links">
             <h3>Quick Links</h3>
             <ul>
@@ -107,8 +105,10 @@
           <p>&copy; 2024 minieatske. All rights reserved.</p>
         </div>
     </footer>
-    
+
     <script>
+        const kenyanPhoneRegex = /^(?:254|0)(?:7[0-9]|1[0-2])[0-9]{6}$/;
+
         function filterItems(category) {
             const items = document.querySelectorAll('.item');
             items.forEach(item => {
@@ -120,7 +120,7 @@
                 }
             });
         }
-    
+
         function addToCart(id, name, price) {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
             const existingItemIndex = cart.findIndex(item => item.id === id);
@@ -133,7 +133,7 @@
             updateCartCount();
             displayAddToCartMessage(name);
         }
-    
+
         function removeFromCart(id) {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
             const itemIndex = cart.findIndex(item => item.id === id);
@@ -144,7 +144,7 @@
                 updateCartCount();
             }
         }
-    
+
         function displayAddToCartMessage(itemName) {
             const message = document.createElement('div');
             message.classList.add('cart-message');
@@ -152,68 +152,66 @@
             document.body.appendChild(message);
             setTimeout(() => message.remove(), 2000);
         }
-    
+
         function calculateTotalPrice(cart) {
-    let totalPrice = 0;
-    for (const item of cart) {
-        totalPrice += item.price * item.quantity;
-    }
-    return totalPrice;
-}
-function placeOrder() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    if (cart.length === 0) {
-        alert('Your cart is empty. Please add items to the cart before placing an order.');
-        return;
-    }
-
-    const phoneNumber = document.getElementById('phone-number').value.trim();
-    const paymentMethod = document.getElementById('payment-method').value;
-
-    if (!phoneNumber || !paymentMethod) {
-        alert('Please enter a phone number and select a payment method.');
-        return;
-    }
-
-    // Kenyan phone number validation
-    const kenyanPhoneRegex = /^(?:254|0)(?:7[0-9]|1[0-2])[0-9]{6}$/;
-    if (!kenyanPhoneRegex.test(phoneNumber)) {
-        alert('Please enter a valid Kenyan phone number.');
-        return;
-    }
-
-    const orderData = {
-        cart,
-        phoneNumber,
-        paymentMethod
-    };
-
-    fetch('/place-order', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(orderData),
-    })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
+            let totalPrice = 0;
+            for (const item of cart) {
+                totalPrice += item.price * item.quantity;
+            }
+            return totalPrice;
         }
-        throw new Error('Failed to place order');
-    })
-    .then(data => {
-        console.log('Order placed successfully:', data);
-        localStorage.removeItem('cart');
-        loadCart(); 
-        updateCartCount();
-        alert('Your order has been placed successfully!');
-    })
-    .catch(error => {
-        console.error('Error placing order:', error.message);
-        alert('Failed to place order. Please try again later.');
-    });
-}
 
+        function placeOrder() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            if (cart.length === 0) {
+                alert('Your cart is empty. Please add items to the cart before placing an order.');
+                return;
+            }
+
+            const phoneNumber = document.getElementById('phone-number').value.trim();
+            const paymentMethod = document.getElementById('payment-method').value;
+
+            if (!phoneNumber || !paymentMethod) {
+                alert('Please enter a phone number and select a payment method.');
+                return;
+            }
+
+            if (!kenyanPhoneRegex.test(phoneNumber)) {
+                alert('Please enter a valid Kenyan phone number.');
+                return;
+            }
+
+            const orderData = {
+                cart,
+                phoneNumber,
+                paymentMethod
+            };
+
+            fetch('/place-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(orderData),
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Failed to place order');
+            })
+            .then(data => {
+                console.log('Order placed successfully:', data);
+                localStorage.removeItem('cart');
+                loadCart();
+                updateCartCount();
+                alert('Your order has been placed successfully!');
+            })
+            .catch(error => {
+                console.error('Error placing order:', error.message);
+                alert('Failed to place order. Please try again later.');
+            });
+        }
 
         function loadCart() {
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -226,7 +224,7 @@ function placeOrder() {
                 cartItem.innerHTML = `
                     <div>
                         <h3>${item.name}</h3>
-                        <p>$${item.price} x ${item.quantity}</p>
+                        <p>KES ${item.price} x ${item.quantity}</p>
                     </div>
                     <button onclick="removeFromCart('${item.id}')">Remove</button>
                 `;
@@ -235,37 +233,37 @@ function placeOrder() {
             });
             const totalElement = document.createElement('div');
             totalElement.classList.add('total');
-            totalElement.textContent = `Total: $${total.toFixed(2)}`;
+            totalElement.textContent = `Total: KES ${total.toFixed(2)}`;
             cartList.appendChild(totalElement);
         }
-    
+
         function updateCartCount() {
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
             const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
             document.getElementById('cart-count').textContent = cartCount;
         }
-    
+
         // Modal logic
         const cartLink = document.getElementById('cart-link');
         const cartModal = document.getElementById('cart-modal');
         const closeCartModal = document.getElementById('close-cart-modal');
-    
+
         cartLink.onclick = function(event) {
             event.preventDefault();
             cartModal.style.display = 'block';
             loadCart();
         };
-    
+
         closeCartModal.onclick = function() {
             cartModal.style.display = 'none';
         };
-    
+
         window.onclick = function(event) {
             if (event.target === cartModal) {
                 cartModal.style.display = 'none';
             }
         };
-    
+
         document.addEventListener('DOMContentLoaded', () => {
             loadCart();
             updateCartCount();
