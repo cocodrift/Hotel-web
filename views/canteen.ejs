@@ -107,8 +107,6 @@
     </footer>
 
     <script>
-        const kenyanPhoneRegex = /^(?:254|0)(?:7[0-9]|1[0-2])[0-9]{6}$/;
-
         function filterItems(category) {
             const items = document.querySelectorAll('.item');
             items.forEach(item => {
@@ -173,11 +171,6 @@
 
             if (!phoneNumber || !paymentMethod) {
                 alert('Please enter a phone number and select a payment method.');
-                return;
-            }
-
-            if (!kenyanPhoneRegex.test(phoneNumber)) {
-                alert('Please enter a valid Kenyan phone number.');
                 return;
             }
 
